@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es2016",
+        "module": "amd",
+        "sourceMap": true,
+        "outDir": "build",
+        "outFile": "build/runnable.js"
+    }
+}
