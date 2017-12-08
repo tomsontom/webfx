@@ -18,6 +18,7 @@ namespace svgscene.text {
         }
 
         prefHeight(width: number) {
+            console.log("prefheight:", this.textNode.getBBox());
             return this.textNode.getBBox().height;
         }
 
