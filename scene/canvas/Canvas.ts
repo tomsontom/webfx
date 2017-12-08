@@ -35,5 +35,11 @@ namespace scene.canvas {
         getNgNode(): scene.NGNode {
             return this.ng;
         }
+
+        resize(width: number, height: number) {
+            this.width  = width == null ? 0 : width;
+            this.height = height == null ? 0 : height;
+            this.ng.sync();
+        }
     }
 }

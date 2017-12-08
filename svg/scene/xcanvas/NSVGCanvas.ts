@@ -37,11 +37,11 @@ namespace svgscene.canvas {
             }
 
             if( this.canvas.getWidth() ) {
-                this.canvasNode.setAttribute("width",this.canvas.getWidth()+"");
+                this.canvasNode.width = this.canvas.getWidth();
             }
 
             if( this.canvas.getHeight() ) {
-                this.canvasNode.setAttribute("height",this.canvas.getHeight()+"");
+                this.canvasNode.height = this.canvas.getHeight();
             }
         }
     }
