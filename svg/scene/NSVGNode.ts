@@ -27,6 +27,10 @@ namespace svgscene {
             return document.createElementNS(NSVGNode.ns, 'text') as SVGTextElement;
         }
 
+        static createForeignObjectElement() : SVGForeignObjectElement {
+            return document.createElementNS(NSVGNode.ns, 'foreignObject') as SVGForeignObjectElement;
+        }
+
         abstract getDom() : SVGGElement;
 
         sync() {
