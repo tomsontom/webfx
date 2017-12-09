@@ -111,29 +111,39 @@ namespace scene.paint {
 
         static hsb(hue : number, saturation : number, brightness : number, opacity? : number) : Color {
             Color.checkSB(saturation, brightness);
-            var rgb    : number[] = util.Utils.HSBToRGB(hue, saturation, brightness);
+            var rgb    : number[] = util.Utils.HSBtoRGB(hue, saturation, brightness);
             var result : Color    = new Color(rgb[0], rgb[1], rgb[2], opacity);
             return result;
         }
 
         toRGBAString() {
-            return "rgba("+this.red*255+","+this.green*255+","+this.blue*255+","+this.opacity+")";
+            var rgb :number[] = this.toRGB();
+            return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2]  + "," + this.opacity + ")";
+        }
+
+        toString() {
+            var rgb : number[] = this.toRGB();
+            return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+        }
+
+        private toRGB() : number[] {
+            return [ Math.trunc(this.red*255), Math.trunc(this.green*255), Math.trunc(this.blue*255) ]
         }
 
         getHue() : number {
-            return util.Utils.RGBToHSB(this.red, this.green, this.blue)[0];
+            return util.Utils.RGBtoHSB(this.red, this.green, this.blue)[0];
         }
 
         getSaturation() : number {
-            return util.Utils.RGBToHSB(this.red, this.green, this.blue)[1];
+            return util.Utils.RGBtoHSB(this.red, this.green, this.blue)[1];
         }
 
         getBrightness() : number {
-            return util.Utils.RGBToHSB(this.red, this.green, this.blue)[2];
+            return util.Utils.RGBtoHSB(this.red, this.green, this.blue)[2];
         }
 
         deriveColor(hueShift : number, saturationFactor : number, brightnessFactor : number, opacityFactor : number) : Color {
-            var hsb : number[] = util.Utils.RGBToHSB(this.red, this.green, this.blue);
+            var hsb : number[] = util.Utils.RGBtoHSB(this.red, this.green, this.blue);
             var b = hsb[2];
             if (b == 0 && brightnessFactor > 1.0) {
                 b = 0.05;
