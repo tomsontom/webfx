@@ -128,7 +128,7 @@ namespace util {
             var hue: number;
             var saturation: number;
             var brightness: number;
-            var hsbvals: number[];
+            var hsbvals: number[] = [];
             var cmax: number = (red > green) ? red : green;
             var cmin: number = (red < green) ? red : green;
 
