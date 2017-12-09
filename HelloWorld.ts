@@ -10,4 +10,7 @@ function run() {
     button.resize(200,30);
     button.layoutChildren();
     console.log(svg);
+
+    var color = scene.paint.Color.AQUAMARINE;
+    console.log(color.darker().toRGBAString());
 }
