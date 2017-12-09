@@ -1,1 +1,8 @@
 build/
+/.idea/webfx.iml
+/.idea/codeStyles
+/.idea/angular-settings.xml
+.DS_Store
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea

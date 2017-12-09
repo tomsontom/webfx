@@ -1,6 +1,7 @@
 
 namespace svgscene.text {
-    export class NSVGText extends svgscene.NSVGNode implements scene.text.NGText {
+
+    export class NSVGText extends NSVGNode implements scene.text.NGText {
         text : scene.text.Text;
         dom : SVGGElement;
         textNode : SVGTextElement;
