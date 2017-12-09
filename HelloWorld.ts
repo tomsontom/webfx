@@ -3,9 +3,12 @@
 /// <reference path="./scene/control/Button.ts" />
 
 function run() {
+
+
     var color = scene.paint.Color.AQUAMARINE;
     console.log(color.toRGBAString());
     console.log(color.toString());
+    console.log(color.red + ", " + color.green + ", " + color.blue);
 
     console.log(util.Utils.RGBtoHSB(color.red, color.green, color.blue));
 
