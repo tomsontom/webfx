@@ -406,7 +406,7 @@ namespace scene.paint {
         private static readonly namedColors : {[key : string] : Color } = NamedColors.createNamedColors();
 
         static get(name : string) : Color {
-            return NamedColors.namedColors.name;
+            return NamedColors.namedColors[name];
         }
 
         private static createNamedColors() : {[key : string] : Color } {
