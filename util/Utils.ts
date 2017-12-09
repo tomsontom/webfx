@@ -1,5 +1,4 @@
 namespace util {
-
     export class Utils {
 
         static clamp(min : number, value : number, max : number) : number {
@@ -74,7 +73,7 @@ namespace util {
             return prevStop.color;
         }
 
-        static HSBToRGB(hue : number, saturation : number, brightness : number) : number[] {
+        static HSBtoRGB(hue : number, saturation : number, brightness : number) : number[] {
             var normalizedHue : number = ((hue % 360) + 360) % 360;
             hue = normalizedHue / 360;
             var r : number = 0;
@@ -125,7 +124,7 @@ namespace util {
             return rgb;
         }
 
-        static RGBToHSB(red : number, green : number, blue : number) : number[] {
+        static RGBtoHSB(red : number, green : number, blue : number) : number[] {
             var hue: number;
             var saturation: number;
             var brightness: number;
