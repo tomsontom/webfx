@@ -1,6 +1,6 @@
 namespace scene.shape {
-    export interface NGShape extends NGNode {
-        
+    export class NGShape implements NGNode {
+        sync() {}
     }
     export abstract class Shape extends Node {
 
