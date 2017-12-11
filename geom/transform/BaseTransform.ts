@@ -7,6 +7,8 @@ namespace geom.transform {
     }
 
     export abstract class BaseTransform {
+        static readonly IDENTITY_TRANSFORM : BaseTransform = new Identity();
+        static readonly EPSILON_ABSOLUTE       : number = 1.0e-5;
         static readonly TYPE_UNKNOWN           : number = -1;
         static readonly TYPE_IDENTITY          : number = 0;
         static readonly TYPE_TRANSLATION       : number = 1;
@@ -27,19 +29,33 @@ namespace geom.transform {
              BaseTransform.TYPE_GENERAL_TRANSFORM |
              BaseTransform.TYPE_FLIP);
 
-
         degreeError(maxSupported : Degree) : void {
             throw new SyntaxError("does not support higher than "+maxSupported+" operations");
         }
 
-        static getInstance(mxx : number, mxy : number, mxt : number,
-                           myx : number, myy : number, myt : number) : BaseTransform {
-                return BaseTransform.getInstance(mxx, myx, mxy, myy, mxt, myt);
+        static getInstance(tx? : BaseTransform,
+                           mxx? : number, mxy? : number, mxt? : number,
+                           myx? : number, myy? : number, myt? : number) : BaseTransform {
+            if (tx === undefined) {
+                if (mxx == 1.0 && myx == 0.0 && mxy == 0.0 && myy == 1.0) {
+                    return BaseTransform.getTranslateInstance(mxt, myt);
+                } else {
+                    return new geom.transform.Affine2D(mxx, myx, mxy, myy, mxt, myt);
+                }
+            } else {
+                if (tx.isIdentity()) {
+                    return this.IDENTITY_TRANSFORM;
+                } else if (tx.isTranslateOrIdentity()) {
+                    return new geom.transform.Translate2D(tx);
+                } else {
+                    return new geom.transform.Affine2D(tx);
+                }
+            }
         }
 
         getInstance(mxx : number, myx : number, mxy : number, myy : number, mxt : number, myt : number) : BaseTransform {
             if (mxx == 1.0 && myx == 0.0 && mxy == 0.0 && myy == 1.0) {
-                return getTranslateInstance(mxt, myt);
+                return BaseTransform.getTranslateInstance(mxt, myt);
             } else {
                 return new geom.transform.Affine2D(mxx, myx, mxy, myy, mxt, myt);
             }
@@ -49,7 +65,7 @@ namespace geom.transform {
             if (mxt == 0.0 && myt == 0.0) {
                 return BaseTransform.IDENTITY_TRANSFORM;
             } else {
-                return new Translate2D(mxt, myt);
+                return new geom.transform.Translate2D(mxt, myt);
             }
         }
 
@@ -86,20 +102,18 @@ namespace geom.transform {
         getMzt() : number { return 0.0; }
 
         abstract transform(src : Point2D, dst : Point2D) : geom.Point2D;
-        abstract inverseTransform(src : Point2D, dst : Point2D) : geom.Point2D;
-
         abstract transform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
         abstract transform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
         abstract transform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
         abstract transform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
-        abstract deltaTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
-        abstract deltaTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
-        abstract inverseTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
-        abstract inverseDeltaTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
-        abstract inverseTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
-
         abstract transform(bounds : BaseBounds, result : BaseBounds) : BaseBounds;
         abstract transform(rect : geom.Rectangle, result : geom.Rectangle) : void;
+        abstract deltaTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
+        abstract deltaTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
+        abstract inverseDeltaTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
+        abstract inverseTransform(src : Point2D, dst : Point2D) : geom.Point2D;
+        abstract inverseTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
+        abstract inverseTransform(srcPts : number[], srcOff : number,dstPts : number[], dstOff : number,numPts : number) : void;
         abstract inverseTransform(bounds : BaseBounds, result : BaseBounds) : BaseBounds;
         abstract inverseTransform(rect : Rectangle, result : geom.Rectangle) : void;
 
@@ -110,37 +124,32 @@ namespace geom.transform {
 
         abstract invert() : void;
 
-        abstract restoreTransform(double mxx, double myx, double mxy, double myy, double mxt, double myt) : void;
+        abstract restoreTransform(mxx : number, myx : number, mxy : number, myy : number, mxt : number, myt : number) : void;
+        abstract restoreTransform(mxx : number, mxy : number, mxt : number, myx : number, myy : number, myt : number) : void;
 
-        abstract void restoreTransform(double mxx, double mxy, double mxz, double mxt, double myx, double myy, double myz, double myt, double mzx, double mzy, double mzz, double mzt);
+        abstract deriveWithTranslation(mxt : number, myt : number) : BaseTransform;
+        abstract deriveWithTranslation(mxt : number, myt : number, mzt : number) : BaseTransform;
+        abstract deriveWithScale(mxx : number, myy : number, mzz : number) : BaseTransform;
+        abstract deriveWithRotation(theta : number, axisX : number, axisY : number, axisZ : number) : BaseTransform;
+        abstract deriveWithPreTranslation(mxt : number, myt : number) : BaseTransform;
+        abstract deriveWithPreConcatenation(transform : BaseTransform) : BaseTransform;
+        abstract deriveWithConcatenation(mxx : number, myx : number, mxy : number, myy : number, mxt : number, myt : number) : BaseTransform;
+        abstract deriveWithConcatenation(tx : BaseTransform) : BaseTransform;
+        abstract deriveWithNewTransform(tx : BaseTransform) : BaseTransform;
 
-        abstract BaseTransform deriveWithTranslation(double mxt, double myt);
-        abstract BaseTransform deriveWithTranslation(double mxt, double myt, double mzt);
-        abstract BaseTransform deriveWithScale(double mxx, double myy, double mzz);
-        abstract BaseTransform deriveWithRotation(double theta, double axisX, double axisY, double axisZ);
-        abstract BaseTransform deriveWithPreTranslation(double mxt, double myt);
-        abstract BaseTransform deriveWithConcatenation(double mxx, double myx, double mxy, double myy, double mxt, double myt);
-        abstract BaseTransform deriveWithConcatenation(double mxx, double mxy, double mxz, double mxt, double myx, double myy, double myz, double myt, double mzx, double mzy, double mzz, double mzt);
-        abstract BaseTransform deriveWithPreConcatenation(BaseTransform transform);
-        abstract BaseTransform deriveWithConcatenation(BaseTransform tx);
-        abstract BaseTransform deriveWithNewTransform(BaseTransform tx);
+        abstract createInverse() : BaseTransform;
 
-        abstract BaseTransform createInverse() throws NoninvertibleTransformException;
+        abstract copy() : BaseTransform;
 
-        abstract BaseTransform copy();
-
-
-        static geom.Point2D makePoint(Point2D src, Point2D dst) {
+        static makePoint(src : geom.Point2D, dst : geom.Point2D) : geom.Point2D {
             if (dst == null) {
-                dst = new Point2D();
+                dst = new geom.Point2D();
             }
             return dst;
         }
 
-        static readonly EPSILON_ABSOLUTE : number = 1.0e-5;
-
-        public static boolean almostZero(double a) {
-            return ((a < EPSILON_ABSOLUTE) && (a > -EPSILON_ABSOLUTE));
+        static almostZero(a : number) : boolean {
+            return ((a < BaseTransform.EPSILON_ABSOLUTE) && (a > -BaseTransform.EPSILON_ABSOLUTE));
         }
     }
 }

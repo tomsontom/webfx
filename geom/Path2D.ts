@@ -53,7 +53,7 @@ namespace geom {
             this.floatCoords = p2df.floatCoords;
         }
 
-        currentSegment(coords : number[]) : number{
+        currentSegment(coords : number[]) : number {
             let type      = this.path.pointTypes[this.typeIdx];
             let numCoords = curvecoords[type];
             if (numCoords > 0) {
@@ -106,12 +106,13 @@ namespace geom {
 
         constructor();
         constructor(rule: number)
+        constructor(rule : number, initialCapacity : number);
         constructor(rule?: number, initialCapacity?: number) {
             super();
             if (rule && rule >= 0 && rule <= 2) {
-                setWindingRule(rule);
+                this.setWindingRule(rule);
             } else {
-                setWindingRule(Path2D.WIND_NON_ZERO);
+                this.setWindingRule(Path2D.WIND_NON_ZERO);
             }
             this.pointTypes  = [];
             this.floatCoords = [];
