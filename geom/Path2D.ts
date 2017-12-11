@@ -584,7 +584,7 @@ namespace geom {
             let crossings : number = this.rectCrossings(x, y, x + w, y + h);
             return (crossings == geom.Shape.RECT_INTERSECTS || (crossings & mask) != 0);
         }
-        
+
         getPathIterator(tx : geom.transform.BaseTransform, flatness? : number) : PathIterator {
             if (flatness !== undefined) {
                 return new FlatteningPathIterator(this.getPathIterator(tx), flatness);

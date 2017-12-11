@@ -1,101 +1,88 @@
 namespace geom {
     export abstract class Shape {
-        public abstract getBounds() : geom.RectBounds;
+        abstract getBounds() : geom.RectBounds;
 
-        public abstract contains(x : number, y : number) : boolean;
+        abstract contains(x : number, y : number) : boolean;
 
         public contains(p : geom.Point2D) : boolean{
             return contains(p.x, p.y);
         }
 
-        public abstract intersects(x : number, y : number, w : number, h : number) : boolean;
+        abstract intersects(x : number, y : number, w : number, h : number) : boolean;
 
-        public intersects(r : geom.RectBounds) : boolean {
-        float x = r.getMinX();
-        float y = r.getMinY();
-        float w = r.getMaxX() - x;
-        float h = r.getMaxY() - y;
-        return intersects(x, y, w, h);
-    }
-
-public abstract boolean contains(float x, float y, float w, float h);
-
-public boolean contains(RectBounds r) {
-        float x = r.getMinX();
-        float y = r.getMinY();
-        float w = r.getMaxX() - x;
-        float h = r.getMaxY() - y;
-        return contains(x, y, w, h);
-    }
-
-public abstract PathIterator getPathIterator(BaseTransform tx);
-
-public abstract PathIterator getPathIterator(BaseTransform tx, float flatness);
-
-public abstract Shape copy();
-
-public static int pointCrossingsForPath(PathIterator pi, float px, float py) {
-        if (pi.isDone()) {
-            return 0;
+        intersects(r : geom.RectBounds) : boolean {
+            let x : number = r.getMinX();
+            let y : number = r.getMinY();
+            let w : number = r.getMaxX() - x;
+            let h : number = r.getMaxY() - y;
+            return this.intersects(x, y, w, h);
         }
-        float coords[] = new float[6];
-        if (pi.currentSegment(coords) != PathIterator.SEG_MOVETO) {
-            throw new IllegalPathStateException("missing initial moveto "+
-                                                "in path definition");
+
+        abstract contains(x : number, y : number, w : number, h : number) : boolean;
+
+        contains(r : geom.RectBounds) : boolean {
+            let x : number = r.getMinX();
+            let y : number = r.getMinY();
+            let w : number = r.getMaxX() - x;
+            let h : number = r.getMaxY() - y;
+            return this.contains(x, y, w, h);
         }
-        pi.next();
-        float movx = coords[0];
-        float movy = coords[1];
-        float curx = movx;
-        float cury = movy;
-        float endx, endy;
-        int crossings = 0;
+
+        abstract getPathIterator(tx : geom.BaseTransform) : geom.PathIterator;
+
+        abstract getPathIterator(tx : geom.BaseTransform, flatness : number) : geom.PathIterator;
+
+        abstract copy() : geom.Shape;
+
+        static pointCrossingsForPath(pi : PathIterator, px : number, py : number) : number {
+            if (pi.isDone()) {
+                return 0;
+            }
+            let coords : number[] = [];
+            if (pi.currentSegment(coords) != geom.SegmentType.MOVE_TO) {
+                throw new SyntaxError("missing initial moveto in path definition");
+            }
+            pi.next();
+            let movx : number = coords[0];
+            let movy : number = coords[1];
+            let curx : number = movx;
+            let cury : number = movy;
+            let endx : number;
+            let endy : number;
+            let crossings : number = 0;
         while (!pi.isDone()) {
             switch (pi.currentSegment(coords)) {
-                case PathIterator.SEG_MOVETO:
+                case geom.SegmentType.MOVE_TO:
                     if (cury != movy) {
-                        crossings += pointCrossingsForLine(px, py,
-                            curx, cury,
-                            movx, movy);
+                        crossings += this.pointCrossingsForLine(px, py, curx, cury, movx, movy);
                     }
                     movx = curx = coords[0];
                     movy = cury = coords[1];
                     break;
-                case PathIterator.SEG_LINETO:
+                case geom.SegmentType.LINE_TO:
                     endx = coords[0];
                     endy = coords[1];
-                    crossings += pointCrossingsForLine(px, py,
-                        curx, cury,
-                        endx, endy);
+                    crossings += this.pointCrossingsForLine(px, py, curx, cury, endx, endy);
                     curx = endx;
                     cury = endy;
                     break;
-                case PathIterator.SEG_QUADTO:
+                case geom.SegmentType.QUAD_TO:
                     endx = coords[2];
                     endy = coords[3];
-                    crossings += pointCrossingsForQuad(px, py,
-                        curx, cury,
-                        coords[0], coords[1],
-                        endx, endy, 0);
+                    crossings += this.pointCrossingsForQuad(px, py, curx, cury, coords[0], coords[1], endx, endy, 0);
                     curx = endx;
                     cury = endy;
                     break;
-                case PathIterator.SEG_CUBICTO:
+                case geom.SegmentType.CURVE_TO:
                     endx = coords[4];
                     endy = coords[5];
-                    crossings += pointCrossingsForCubic(px, py,
-                        curx, cury,
-                        coords[0], coords[1],
-                        coords[2], coords[3],
-                        endx, endy, 0);
+                    crossings += this.pointCrossingsForCubic(px, py, curx, cury, coords[0], coords[1], coords[2], coords[3], endx, endy, 0);
                     curx = endx;
                     cury = endy;
                     break;
-                case PathIterator.SEG_CLOSE:
+                case geom.SegmentType.CLOSE:
                     if (cury != movy) {
-                        crossings += pointCrossingsForLine(px, py,
-                            curx, cury,
-                            movx, movy);
+                        crossings += this.pointCrossingsForLine(px, py, curx, cury, movx, movy);
                     }
                     curx = movx;
                     cury = movy;
@@ -104,138 +91,114 @@ public static int pointCrossingsForPath(PathIterator pi, float px, float py) {
             pi.next();
         }
         if (cury != movy) {
-            crossings += pointCrossingsForLine(px, py,
-                curx, cury,
-                movx, movy);
+            crossings += this.pointCrossingsForLine(px, py, curx, cury, movx, movy);
         }
         return crossings;
     }
 
 
-public static int pointCrossingsForLine(float px, float py,
-        float x0, float y0,
-        float x1, float y1) {
-        if (py <  y0 && py <  y1) return 0;
-        if (py >= y0 && py >= y1) return 0;
-        // assert(y0 != y1);
-        if (px >= x0 && px >= x1) return 0;
-        if (px <  x0 && px <  x1) return (y0 < y1) ? 1 : -1;
-        float xintercept = x0 + (py - y0)         if (px >= xintercept) return 0;
-        return (y0 < y1) ? 1 : -1;
-    }
+        static pointCrossingsForLine(px : number, py : number, x0 : number, y0 : number, x1 : number, y1 : number) : number {
+            if (py <  y0 && py <  y1) return 0;
+            if (py >= y0 && py >= y1) return 0;
+            // assert(y0 != y1);
+            if (px >= x0 && px >= x1) return 0;
+            if (px <  x0 && px <  x1) return (y0 < y1) ? 1 : -1;
+            let xintercept : number = x0 + (py - y0) * (x1 - x0) / (y1 - y0);
+            if (px >= xintercept) return 0;
+            return (y0 < y1) ? 1 : -1;
+        }
 
-public static int pointCrossingsForQuad(float px, float py,
-        float x0, float y0,
-        float xc, float yc,
-        float x1, float y1, int level){
-        if (py <  y0 && py <  yc && py <  y1) return 0;
-        if (py >= y0 && py >= yc && py >= y1) return 0;
-        // Note y0 could equal y1...
-        if (px >= x0 && px >= xc && px >= x1) return 0;
-        if (px <  x0 && px <  xc && px <  x1) {
-            if (py >= y0) {
-                if (py < y1) return 1;
-            } else {
-                // py < y0
-                if (py >= y1) return -1;
+        static pointCrossingsForQuad(px : number, py : number,
+                                     x0 : number, y0 : number,
+                                     xc : number, yc : number,
+                                     x1 : number, y1 : number, level : number) : number {
+            if (py <  y0 && py <  yc && py <  y1) return 0;
+            if (py >= y0 && py >= yc && py >= y1) return 0;
+            if (px >= x0 && px >= xc && px >= x1) return 0;
+            if (px <  x0 && px <  xc && px <  x1) {
+                if (py >= y0) {
+                    if (py < y1) return 1;
+                } else {
+                    if (py >= y1) return -1;
+                }
+                return 0;
             }
-            // py outside of y01 range, and/or y0==y1
-            return 0;
-        }
-        // double precision only has 52 bits of mantissa
-        if (level > 52) return pointCrossingsForLine(px, py, x0, y0, x1, y1);
-        float x0c = (x0 + xc) / 2;
-        float y0c = (y0 + yc) / 2;
-        float xc1 = (xc + x1) / 2;
-        float yc1 = (yc + y1) / 2;
-        xc = (x0c + xc1) / 2;
-        yc = (y0c + yc1) / 2;
-        if (Float.isNaN(xc) || Float.isNaN(yc)) {
-            // [xy]c are NaN if any of [xy]0c or [xy]c1 are NaN
-            // [xy]0c or [xy]c1 are NaN if any of [xy][0c1] are NaN
-            // These values are also NaN if opposing infinities are added
-            return 0;
-        }
-        return (pointCrossingsForQuad(px, py,
-            x0, y0, x0c, y0c, xc, yc,
-                level+1) +
-                pointCrossingsForQuad(px, py,
-                    xc, yc, xc1, yc1, x1, y1,
-                level+1));
-    }
 
-public static int pointCrossingsForCubic(float px, float py,
-        float x0, float y0,
-        float xc0, float yc0,
-        float xc1, float yc1,
-        float x1, float y1, int level) {
-        if (py <  y0 && py <  yc0 && py <  yc1 && py <  y1) return 0;
-        if (py >= y0 && py >= yc0 && py >= yc1 && py >= y1) return 0;
-        // Note y0 could equal yc0...
-        if (px >= x0 && px >= xc0 && px >= xc1 && px >= x1) return 0;
-        if (px <  x0 && px <  xc0 && px <  xc1 && px <  x1) {
-            if (py >= y0) {
-                if (py < y1) return 1;
-            } else {
-                // py < y0
-                if (py >= y1) return -1;
+            if (level > 52) return this.pointCrossingsForLine(px, py, x0, y0, x1, y1);
+            let x0c : number = (x0 + xc) / 2;
+            let y0c : number  = (y0 + yc) / 2;
+            let xc1 : number  = (xc + x1) / 2;
+            let yc1 : number  = (yc + y1) / 2;
+            xc = (x0c + xc1) / 2;
+            yc = (y0c + yc1) / 2;
+            if (Number.isNaN(xc) || Number.isNaN(yc)) {
+                return 0;
             }
-            // py outside of y01 range, and/or y0==yc0
-            return 0;
+            return (this.pointCrossingsForQuad(px, py, x0, y0, x0c, y0c, xc, yc, level+1) +
+                    this.pointCrossingsForQuad(px, py, xc, yc, xc1, yc1, x1, y1, level+1));
         }
-        // double precision only has 52 bits of mantissa
-        if (level > 52) return pointCrossingsForLine(px, py, x0, y0, x1, y1);
-        float xmid = (xc0 + xc1) / 2;
-        float ymid = (yc0 + yc1) / 2;
-        xc0 = (x0 + xc0) / 2;
-        yc0 = (y0 + yc0) / 2;
-        xc1 = (xc1 + x1) / 2;
-        yc1 = (yc1 + y1) / 2;
-        float xc0m = (xc0 + xmid) / 2;
-        float yc0m = (yc0 + ymid) / 2;
-        float xmc1 = (xmid + xc1) / 2;
-        float ymc1 = (ymid + yc1) / 2;
-        xmid = (xc0m + xmc1) / 2;
-        ymid = (yc0m + ymc1) / 2;
-        if (Float.isNaN(xmid) || Float.isNaN(ymid)) {
-            // [xy]mid are NaN if any of [xy]c0m or [xy]mc1 are NaN
-            // [xy]c0m or [xy]mc1 are NaN if any of [xy][c][01] are NaN
-            // These values are also NaN if opposing infinities are added
-            return 0;
+
+        static pointCrossingsForCubic(px : number, py : number,
+                                      x0 : number, y0 : number,
+                                      xc0 : number, yc0 : number,
+                                      xc1 : number, yc1 : number,
+                                      x1 : number, y1 : number, level : number) : number {
+            if (py <  y0 && py <  yc0 && py <  yc1 && py <  y1) return 0;
+            if (py >= y0 && py >= yc0 && py >= yc1 && py >= y1) return 0;
+            if (px >= x0 && px >= xc0 && px >= xc1 && px >= x1) return 0;
+            if (px <  x0 && px <  xc0 && px <  xc1 && px <  x1) {
+                if (py >= y0) {
+                    if (py < y1) return 1;
+                } else {
+                    if (py >= y1) return -1;
+                }
+                return 0;
+            }
+            if (level > 52) return this.pointCrossingsForLine(px, py, x0, y0, x1, y1);
+            let xmid : number = (xc0 + xc1) / 2;
+            let ymid : number = (yc0 + yc1) / 2;
+            xc0 = (x0 + xc0) / 2;
+            yc0 = (y0 + yc0) / 2;
+            xc1 = (xc1 + x1) / 2;
+            yc1 = (yc1 + y1) / 2;
+            let xc0m : number = (xc0 + xmid) / 2;
+            let yc0m : number = (yc0 + ymid) / 2;
+            let xmc1 : number = (xmid + xc1) / 2;
+            let ymc1 : number = (ymid + yc1) / 2;
+            xmid = (xc0m + xmc1) / 2;
+            ymid = (yc0m + ymc1) / 2;
+            if (Number.isNaN(xmid) || Number.isNaN(ymid)) {
+                return 0;
+            }
+            return (this.pointCrossingsForCubic(px, py, x0, y0, xc0, yc0, xc0m, yc0m, xmid, ymid, level+1) +
+                    this.pointCrossingsForCubic(px, py, xmid, ymid, xmc1, ymc1, xc1, yc1, x1, y1, level+1));
         }
-        return (pointCrossingsForCubic(px, py,
-            x0, y0, xc0, yc0,
-            xc0m, yc0m, xmid, ymid, level+1) +
-                pointCrossingsForCubic(px, py,
-                    xmid, ymid, xmc1, ymc1,
-                    xc1, yc1, x1, y1, level+1));
-    }
 
-public static final int RECT_INTERSECTS = 0x80000000;
+        static readonly RECT_INTERSECTS : number = 0x80000000;
 
-public static int rectCrossingsForPath(PathIterator pi,
-        float rxmin, float rymin,
-        float rxmax, float rymax) {
+        static rectCrossingsForPath(pi : geom.PathIterator,
+                                    rxmin : number, rymin : number,
+                                    rxmax : number, rymax : number) : number {
         if (rxmax <= rxmin || rymax <= rymin) {
             return 0;
         }
         if (pi.isDone()) {
             return 0;
         }
-        float coords[] = new float[6];
-        if (pi.currentSegment(coords) != PathIterator.SEG_MOVETO) {
-            throw new IllegalPathStateException("missing initial moveto in path definition");
+        let coords : number[] = [];
+        if (pi.currentSegment(coords) != geom.SegmentType.MOVE_TO) {
+            throw new SyntaxError("missing initial moveto in path definition");
         }
         pi.next();
-        float curx, cury, movx, movy, endx, endy;
+        let curx, cury, movx, movy, endx, endy : number;
         curx = movx = coords[0];
         cury = movy = coords[1];
-        int crossings = 0;
-        while (crossings != RECT_INTERSECTS && !pi.isDone()) {
+        let crossings : number = 0;
+        while (crossings != this.RECT_INTERSECTS && !pi.isDone()) {
             switch (pi.currentSegment(coords)) {
-                case PathIterator.SEG_MOVETO:
+                case geom.SegmentType.MOVE_TO:
                     if (curx != movx || cury != movy) {
-                        crossings = rectCrossingsForLine(crossings,
+                        crossings = this.rectCrossingsForLine(crossings,
                             rxmin, rymin,
                             rxmax, rymax,
                             curx, cury,
@@ -246,10 +209,10 @@ public static int rectCrossingsForPath(PathIterator pi,
                     movx = curx = coords[0];
                     movy = cury = coords[1];
                     break;
-                case PathIterator.SEG_LINETO:
+                case geom.SegmentType.LINE_TO:
                     endx = coords[0];
                     endy = coords[1];
-                    crossings = rectCrossingsForLine(crossings,
+                    crossings = this.rectCrossingsForLine(crossings,
                         rxmin, rymin,
                         rxmax, rymax,
                         curx, cury,
@@ -257,10 +220,10 @@ public static int rectCrossingsForPath(PathIterator pi,
                     curx = endx;
                     cury = endy;
                     break;
-                case PathIterator.SEG_QUADTO:
+                case geom.SegmentType.QUAD_TO:
                     endx = coords[2];
                     endy = coords[3];
-                    crossings = rectCrossingsForQuad(crossings,
+                    crossings = this.rectCrossingsForQuad(crossings,
                         rxmin, rymin,
                         rxmax, rymax,
                         curx, cury,
@@ -269,10 +232,10 @@ public static int rectCrossingsForPath(PathIterator pi,
                     curx = endx;
                     cury = endy;
                     break;
-                case PathIterator.SEG_CUBICTO:
+                case geom.SegmentType.CURVE_TO:
                     endx = coords[4];
                     endy = coords[5];
-                    crossings = rectCrossingsForCubic(crossings,
+                    crossings = this.rectCrossingsForCubic(crossings,
                         rxmin, rymin,
                         rxmax, rymax,
                         curx, cury,
@@ -282,9 +245,9 @@ public static int rectCrossingsForPath(PathIterator pi,
                     curx = endx;
                     cury = endy;
                     break;
-                case PathIterator.SEG_CLOSE:
+                case geom.SegmentType.CLOSE:
                     if (curx != movx || cury != movy) {
-                        crossings = rectCrossingsForLine(crossings,
+                        crossings = this.rectCrossingsForLine(crossings,
                             rxmin, rymin,
                             rxmax, rymax,
                             curx, cury,
@@ -292,173 +255,127 @@ public static int rectCrossingsForPath(PathIterator pi,
                     }
                     curx = movx;
                     cury = movy;
-                    // Count should always be a multiple of 2 here.
-                    // assert((crossings & 1) != 0);
                     break;
             }
             pi.next();
         }
-        if (crossings != RECT_INTERSECTS && (curx != movx || cury != movy)) {
-            crossings = rectCrossingsForLine(crossings,
+        if (crossings != this.RECT_INTERSECTS && (curx != movx || cury != movy)) {
+            crossings = this.rectCrossingsForLine(crossings,
                 rxmin, rymin,
                 rxmax, rymax,
                 curx, cury,
                 movx, movy);
         }
-        // Count should always be a multiple of 2 here.
-        // assert((crossings & 1) != 0);
         return crossings;
     }
 
-    /*                    */
-public static int rectCrossingsForLine(int crossings,
-        float rxmin, float rymin,
-        float rxmax, float rymax,
-        float x0, float y0,
-        float x1, float y1)
-    {
+
+    static rectCrossingsForLine(crossings : number,
+                                rxmin : number, rymin : number,
+                                rxmax : number, rymax : number,
+                                x0 : number, y0 : number,
+                                x1 : number, y1 : number) : number {
         if (y0 >= rymax && y1 >= rymax) return crossings;
         if (y0 <= rymin && y1 <= rymin) return crossings;
         if (x0 <= rxmin && x1 <= rxmin) return crossings;
         if (x0 >= rxmax && x1 >= rxmax) {
-            // Line is entirely to the right of the rect
-            // and the vertical ranges of the two overlap by a non-empty amount
-            // Thus, this line segment is partially in the "right-shadow"
-            // Path may have done a complete crossing
-            // Or path may have entered or exited the right-shadow
             if (y0 < y1) {
-                // y-increasing line segment...
-                // We know that y0 < rymax and y1 > rymin
                 if (y0 <= rymin) crossings++;
                 if (y1 >= rymax) crossings++;
             } else if (y1 < y0) {
-                // y-decreasing line segment...
-                // We know that y1 < rymax and y0 > rymin
                 if (y1 <= rymin) crossings--;
                 if (y0 >= rymax) crossings--;
             }
             return crossings;
         }
-        // Remaining case:
-        // Both x and y ranges overlap by a non-empty amount
-        // First do trivial INTERSECTS rejection of the cases
-        // where one of the endpoints is inside the rectangle.
         if ((x0 > rxmin && x0 < rxmax && y0 > rymin && y0 < rymax) ||
             (x1 > rxmin && x1 < rxmax && y1 > rymin && y1 < rymax))
         {
-            return RECT_INTERSECTS;
+            return this.RECT_INTERSECTS;
         }
-        // Otherwise calculate the y intercepts and see where
-        // they fall with respect to the rectangle
-        float xi0 = x0;
+        let xi0 : number = x0;
         if (y0 < rymin) {
-            xi0 += ((rymin - y0)         } else if (y0 > rymax) {
-            xi0 += ((rymax - y0)         }
-        float xi1 = x1;
+            xi0 += ((rymin - y0) * (x1 - x0) / (y1 - y0));
+        } else if (y0 > rymax) {
+            xi0 += ((rymax - y0) * (x1 - x0) / (y1 - y0));
+        }
+        let xi1 : number = x1;
         if (y1 < rymin) {
-            xi1 += ((rymin - y1)         } else if (y1 > rymax) {
-            xi1 += ((rymax - y1)         }
+            xi1 += ((rymin - y1) * (x0 - x1) / (y0 - y1));
+        } else if (y1 > rymax) {
+            xi1 += ((rymax - y1) * (x0 - x1) / (y0 - y1));
+        }
         if (xi0 <= rxmin && xi1 <= rxmin) return crossings;
         if (xi0 >= rxmax && xi1 >= rxmax) {
             if (y0 < y1) {
-                // y-increasing line segment...
-                // We know that y0 < rymax and y1 > rymin
                 if (y0 <= rymin) crossings++;
                 if (y1 >= rymax) crossings++;
             } else if (y1 < y0) {
-                // y-decreasing line segment...
-                // We know that y1 < rymax and y0 > rymin
                 if (y1 <= rymin) crossings--;
                 if (y0 >= rymax) crossings--;
             }
             return crossings;
         }
-        return RECT_INTERSECTS;
+        return this.RECT_INTERSECTS;
     }
 
-    /*                    */
-public static int rectCrossingsForQuad(int crossings,
-        float rxmin, float rymin,
-        float rxmax, float rymax,
-        float x0, float y0,
-        float xc, float yc,
-        float x1, float y1,
-        int level)
-    {
-        if (y0 >= rymax && yc >= rymax && y1 >= rymax) return crossings;
-        if (y0 <= rymin && yc <= rymin && y1 <= rymin) return crossings;
-        if (x0 <= rxmin && xc <= rxmin && x1 <= rxmin) return crossings;
-        if (x0 >= rxmax && xc >= rxmax && x1 >= rxmax) {
-            // Quad is entirely to the right of the rect
-            // and the vertical range of the 3 Y coordinates of the quad
-            // overlaps the vertical range of the rect by a non-empty amount
-            // We now judge the crossings solely based on the line segment
-            // connecting the endpoints of the quad.
-            // Note that we may have 0, 1, or 2 crossings as the control
-            // point may be causing the Y range intersection while the
-            // two endpoints are entirely above or below.
-            if (y0 < y1) {
-                // y-increasing line segment...
-                if (y0 <= rymin && y1 >  rymin) crossings++;
-                if (y0 <  rymax && y1 >= rymax) crossings++;
-            } else if (y1 < y0) {
-                // y-decreasing line segment...
-                if (y1 <= rymin && y0 >  rymin) crossings--;
-                if (y1 <  rymax && y0 >= rymax) crossings--;
+    static rectCrossingsForQuad(crossings : number,
+        rxmin : number, rymin : number,
+        rxmax : number, rymax : number,
+        x0 : number, y0 : number,
+        xc : number, yc : number,
+        x1 : number, y1 : number,
+        level : number) : number {
+            if (y0 >= rymax && yc >= rymax && y1 >= rymax) return crossings;
+            if (y0 <= rymin && yc <= rymin && y1 <= rymin) return crossings;
+            if (x0 <= rxmin && xc <= rxmin && x1 <= rxmin) return crossings;
+            if (x0 >= rxmax && xc >= rxmax && x1 >= rxmax) {
+                if (y0 < y1) {
+                    if (y0 <= rymin && y1 >  rymin) crossings++;
+                    if (y0 <  rymax && y1 >= rymax) crossings++;
+                } else if (y1 < y0) {
+                    if (y1 <= rymin && y0 >  rymin) crossings--;
+                    if (y1 <  rymax && y0 >= rymax) crossings--;
+                }
+                return crossings;
             }
-            return crossings;
-        }
-        // The intersection of ranges is more complicated
-        // First do trivial INTERSECTS rejection of the cases
-        // where one of the endpoints is inside the rectangle.
+
         if ((x0 < rxmax && x0 > rxmin && y0 < rymax && y0 > rymin) ||
-            (x1 < rxmax && x1 > rxmin && y1 < rymax && y1 > rymin))
-        {
-            return RECT_INTERSECTS;
+            (x1 < rxmax && x1 > rxmin && y1 < rymax && y1 > rymin)) {
+            return this.RECT_INTERSECTS;
         }
-        // Otherwise, subdivide and look for one of the cases above.
-        // double precision only has 52 bits of mantissa
+
         if (level > 52) {
-            return rectCrossingsForLine(crossings,
-                rxmin, rymin, rxmax, rymax,
-                x0, y0, x1, y1);
+            return this.rectCrossingsForLine(crossings, rxmin, rymin, rxmax, rymax, x0, y0, x1, y1);
         }
-        float x0c = (x0 + xc) / 2;
-        float y0c = (y0 + yc) / 2;
-        float xc1 = (xc + x1) / 2;
-        float yc1 = (yc + y1) / 2;
+        let x0c : number = (x0 + xc) / 2;
+        let y0c : number = (y0 + yc) / 2;
+        let xc1 : number = (xc + x1) / 2;
+        let yc1 : number = (yc + y1) / 2;
         xc = (x0c + xc1) / 2;
         yc = (y0c + yc1) / 2;
-        if (Float.isNaN(xc) || Float.isNaN(yc)) {
-            // [xy]c are NaN if any of [xy]0c or [xy]c1 are NaN
-            // [xy]0c or [xy]c1 are NaN if any of [xy][0c1] are NaN
-            // These values are also NaN if opposing infinities are added
+        if (Number.isNaN(xc) || Number.isNaN(yc)) {
             return 0;
         }
-        crossings = rectCrossingsForQuad(crossings,
+        crossings = this.rectCrossingsForQuad(crossings,
             rxmin, rymin, rxmax, rymax,
             x0, y0, x0c, y0c, xc, yc,
             level+1);
-        if (crossings != RECT_INTERSECTS) {
-            crossings = rectCrossingsForQuad(crossings,
-                rxmin, rymin, rxmax, rymax,
-                xc, yc, xc1, yc1, x1, y1,
-                level+1);
+        if (crossings != this.RECT_INTERSECTS) {
+            crossings = this.rectCrossingsForQuad(crossings, rxmin, rymin, rxmax, rymax, xc, yc, xc1, yc1, x1, y1,level+1);
         }
         return crossings;
     }
 
-    /*                    */
-public static int rectCrossingsForCubic(int crossings,
-        float rxmin, float rymin,
-        float rxmax, float rymax,
-        float x0,  float y0,
-        float xc0, float yc0,
-        float xc1, float yc1,
-        float x1,  float y1,
-        int level)
-    {
-        if (y0 >= rymax && yc0 >= rymax && yc1 >= rymax && y1 >= rymax) {
+    static rectCrossingsForCubic(crossings : number,
+        rxmin : number, rymin : number,
+        rxmax : number, rymax : number,
+        x0 : number,  y0 : number,
+        xc0 : number, yc0 : number,
+        xc1 : number, yc1 : number,
+        x1 : number,  y1 : number,
+        level : number) : number {
+            if (y0 >= rymax && yc0 >= rymax && yc1 >= rymax && y1 >= rymax) {
             return crossings;
         }
         if (y0 <= rymin && yc0 <= rymin && yc1 <= rymin && y1 <= rymin) {
@@ -468,67 +385,44 @@ public static int rectCrossingsForCubic(int crossings,
             return crossings;
         }
         if (x0 >= rxmax && xc0 >= rxmax && xc1 >= rxmax && x1 >= rxmax) {
-            // Cubic is entirely to the right of the rect
-            // and the vertical range of the 4 Y coordinates of the cubic
-            // overlaps the vertical range of the rect by a non-empty amount
-            // We now judge the crossings solely based on the line segment
-            // connecting the endpoints of the cubic.
-            // Note that we may have 0, 1, or 2 crossings as the control
-            // points may be causing the Y range intersection while the
-            // two endpoints are entirely above or below.
             if (y0 < y1) {
-                // y-increasing line segment...
                 if (y0 <= rymin && y1 >  rymin) crossings++;
                 if (y0 <  rymax && y1 >= rymax) crossings++;
             } else if (y1 < y0) {
-                // y-decreasing line segment...
                 if (y1 <= rymin && y0 >  rymin) crossings--;
                 if (y1 <  rymax && y0 >= rymax) crossings--;
             }
             return crossings;
         }
-        // The intersection of ranges is more complicated
-        // First do trivial INTERSECTS rejection of the cases
-        // where one of the endpoints is inside the rectangle.
-        if ((x0 > rxmin && x0 < rxmax && y0 > rymin && y0 < rymax) ||
-            (x1 > rxmin && x1 < rxmax && y1 > rymin && y1 < rymax))
-        {
-            return RECT_INTERSECTS;
+
+        if ((x0 > rxmin && x0 < rxmax && y0 > rymin && y0 < rymax) || (x1 > rxmin && x1 < rxmax && y1 > rymin && y1 < rymax)) {
+            return this.RECT_INTERSECTS;
         }
-        // Otherwise, subdivide and look for one of the cases above.
-        // double precision only has 52 bits of mantissa
+
         if (level > 52) {
-            return rectCrossingsForLine(crossings,
-                rxmin, rymin, rxmax, rymax,
-                x0, y0, x1, y1);
+            return this.rectCrossingsForLine(crossings, rxmin, rymin, rxmax, rymax, x0, y0, x1, y1);
         }
-        float xmid = (xc0 + xc1) / 2;
-        float ymid = (yc0 + yc1) / 2;
+        let xmid : number = (xc0 + xc1) / 2;
+        let ymid : number= (yc0 + yc1) / 2;
         xc0 = (x0 + xc0) / 2;
         yc0 = (y0 + yc0) / 2;
         xc1 = (xc1 + x1) / 2;
         yc1 = (yc1 + y1) / 2;
-        float xc0m = (xc0 + xmid) / 2;
-        float yc0m = (yc0 + ymid) / 2;
-        float xmc1 = (xmid + xc1) / 2;
-        float ymc1 = (ymid + yc1) / 2;
+        let xc0m : number = (xc0 + xmid) / 2;
+        let yc0m : number = (yc0 + ymid) / 2;
+        let xmc1 : number = (xmid + xc1) / 2;
+        let ymc1 : number = (ymid + yc1) / 2;
         xmid = (xc0m + xmc1) / 2;
         ymid = (yc0m + ymc1) / 2;
-        if (Float.isNaN(xmid) || Float.isNaN(ymid)) {
-            // [xy]mid are NaN if any of [xy]c0m or [xy]mc1 are NaN
-            // [xy]c0m or [xy]mc1 are NaN if any of [xy][c][01] are NaN
-            // These values are also NaN if opposing infinities are added
+        if (Number.isNaN(xmid) || Number.isNaN(ymid)) {
             return 0;
         }
-        crossings = rectCrossingsForCubic(crossings,
+        crossings = this.rectCrossingsForCubic(crossings,
             rxmin, rymin, rxmax, rymax,
             x0, y0, xc0, yc0,
             xc0m, yc0m, xmid, ymid, level+1);
-        if (crossings != RECT_INTERSECTS) {
-            crossings = rectCrossingsForCubic(crossings,
-                rxmin, rymin, rxmax, rymax,
-                xmid, ymid, xmc1, ymc1,
-                xc1, yc1, x1, y1, level+1);
+        if (crossings != this.RECT_INTERSECTS) {
+            crossings = this.rectCrossingsForCubic(crossings, rxmin, rymin, rxmax, rymax, xmid, ymid, xmc1, ymc1, xc1, yc1, x1, y1, level+1);
         }
         return crossings;
     }
