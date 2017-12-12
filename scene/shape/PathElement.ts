@@ -193,8 +193,61 @@ namespace scene.shape {
     }
 
     export class QuadCurveTo extends PathElement {
+        static  count : number = 0;
+        id            : string;
+        private ctrlX : number;
+        private ctrlY : number;
+        private x     : number;
+        private y     : number;
+
+
+        constructor();
+        constructor(ctrlX : number, ctrlY : number, x : number, y : number);
+        constructor(ctrlX? : number, ctrlY? : number, x? : number, y? : number) {
+            super();
+            this.ctrlX = ctrlX;
+            this.ctrlY = ctrlY;
+            this.x     = x;
+            this.y     = y;
+            this.id    = "QuadTo_" + (QuadCurveTo.count++);
+        }
+
+        getControlX() : number { return this.ctrlX; }
+        setControlX(ctrlX : number) : void {
+            this.ctrlX = ctrlX;
+            this.u();
+        }
+
+        getControlY() : number { return this.ctrlY; }
+        setControlY(ctrlY : number) {
+            this.ctrlY = ctrlY;
+            this.u();
+        }
+
+        getX() : number { return this.x; }
+        setX(x : number) {
+            this.x = x;
+            this.u();
+        }
+
+        getY() : number { return this.y; }
+        setY(y : number) {
+            this.y = y;
+            this.u();
+        }
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
+            if (this.isAbsolute()) {
+                pgPath.addQuadTo(this.getControlX(), this.getControlY(), this.getX(), this.getY());
+            } else {
+                let dx : number = pgPath.currentX;
+                let dy : number = pgPath.currentY;
+                pgPath.addQuadTo((this.getControlX() + dx), (this.getControlY() + dy), (this.getX() + dx), (this.getY() + dy));
+            }
+        }
+
+        toString() : string {
+            return " Q " + this.ctrlX + "," + this.ctrlY + "," + this.x + "," + this.y + " ";
         }
     }
 

@@ -18,6 +18,10 @@ namespace svgscene.shape {
 
         }
 
+        addQuadTo(ctrlX : number, ctrlY : number, x : number, y : number) : void {
+
+        }
+
         getDom(): SVGGElement {
             return this.dom;
         }
