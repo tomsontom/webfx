@@ -1,11 +1,20 @@
 <html>
     <head>
+            <script src="require.js"></script>
             <script src="build/runnable.js"></script>
     </head>
     <body>
-        <button onclick="run();">Test</button>
         <svg id="sample" xmlns="http://www.w3.org/2000/svg"></svg>
 
         <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+
+        <svg id="path" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"></svg>
+
+        <script>
+            requirejs( ["HelloWorld"], function( HelloWorld ) {
+                var a = new HelloWorld.App();
+                a.start();
+            });
+        </script>
     </body>
 </html>

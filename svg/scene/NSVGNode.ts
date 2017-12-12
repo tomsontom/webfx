@@ -1,40 +1,46 @@
+import {NGNode} from "./../../scene/Node";
 
-namespace svgscene {
-    export abstract class NSVGNode implements scene.NGNode {
-        static ns = 'http://www.w3.org/2000/svg';
+export abstract class NSVGNode implements NGNode {
+    static ns = 'http://www.w3.org/2000/svg';
 
-        static createGElement() : SVGGElement {
-            return document.createElementNS(NSVGNode.ns, 'g') as SVGAElement;
-        }
+    static createPathElement(): SVGPathElement {
+        return document.createElementNS(NSVGNode.ns, 'path') as SVGPathElement;
+    }
 
-        static createRectElement() : SVGRectElement {
-            return document.createElementNS(NSVGNode.ns, 'rect') as SVGRectElement;
-        }
+    static createGElement(): SVGGElement {
+        return document.createElementNS(NSVGNode.ns, 'g') as SVGAElement;
+    }
 
-        static createDefsElement() : SVGDefsElement {
-            return document.createElementNS(NSVGNode.ns, 'defs') as SVGDefsElement;
-        }
+    static createRectElement(): SVGRectElement {
+        return document.createElementNS(NSVGNode.ns, 'rect') as SVGRectElement;
+    }
 
-        static createLinearGradientElement() : SVGLinearGradientElement {
-            return document.createElementNS(NSVGNode.ns, 'linearGradient') as SVGLinearGradientElement;
-        }
+    static createDefsElement(): SVGDefsElement {
+        return document.createElementNS(NSVGNode.ns, 'defs') as SVGDefsElement;
+    }
 
-        static createStopElement() : SVGStopElement {
-            return document.createElementNS(NSVGNode.ns, 'stop') as SVGStopElement;
-        }
+    static createLinearGradientElement(): SVGLinearGradientElement {
+        return document.createElementNS(NSVGNode.ns, 'linearGradient') as SVGLinearGradientElement;
+    }
 
-        static createTextElement() : SVGTextElement {
-            return document.createElementNS(NSVGNode.ns, 'text') as SVGTextElement;
-        }
+    static createRadialGradientElement(): SVGRadialGradientElement {
+        return document.createElementNS(NSVGNode.ns, 'radialGradient') as SVGRadialGradientElement;
+    }
 
-        static createForeignObjectElement() : SVGForeignObjectElement {
-            return document.createElementNS(NSVGNode.ns, 'foreignObject') as SVGForeignObjectElement;
-        }
+    static createStopElement(): SVGStopElement {
+        return document.createElementNS(NSVGNode.ns, 'stop') as SVGStopElement;
+    }
 
-        abstract getDom() : SVGGElement;
+    static createTextElement(): SVGTextElement {
+        return document.createElementNS(NSVGNode.ns, 'text') as SVGTextElement;
+    }
 
-        sync() {
-            
-        }
+    static createForeignObjectElement(): SVGForeignObjectElement {
+        return document.createElementNS(NSVGNode.ns, 'foreignObject') as SVGForeignObjectElement;
+    }
+
+    abstract getDom(): SVGGElement;
+
+    sync() {
     }
 }
