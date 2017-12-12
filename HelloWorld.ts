@@ -40,8 +40,8 @@ function run() {
 
     var path = new scene.shape.Path();
     path.add(new scene.shape.MoveTo(10, 10));
-    path.add(new scene.shape.LineTo(100, 100));
-    path.add(new scene.shape.LineTo(10, 200));
+    path.add(new scene.shape.LineTo(50, 50));
+    path.add(new scene.shape.LineTo(10, 90));
     path.add(new scene.shape.ClosePath());
     path.resize(400, 400);
 
