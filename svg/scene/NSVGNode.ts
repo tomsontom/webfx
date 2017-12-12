@@ -23,6 +23,10 @@ namespace svgscene {
             return document.createElementNS(NSVGNode.ns, 'linearGradient') as SVGLinearGradientElement;
         }
 
+        static createRadialGradientElement() : SVGRadialGradientElement {
+            return document.createElementNS(NSVGNode.ns, 'radialGradient') as SVGRadialGradientElement;
+        }
+
         static createStopElement() : SVGStopElement {
             return document.createElementNS(NSVGNode.ns, 'stop') as SVGStopElement;
         }
