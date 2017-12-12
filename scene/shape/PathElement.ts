@@ -329,6 +329,7 @@ namespace scene.shape {
     export class ClosePath extends PathElement {
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
+            pgPath.addClosePath();
         }
     }
 }

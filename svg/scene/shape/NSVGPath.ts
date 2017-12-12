@@ -26,7 +26,7 @@ namespace svgscene.shape {
 
         }
 
-        addCloseTo() {
+        addClosePath() {
 
         }
 
