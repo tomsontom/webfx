@@ -7,8 +7,9 @@ namespace geom {
         private maxX : number;
         private maxY : number;
 
-
-        constructor(minX : number, minY : number, maxX : number, maxY :number) {
+        constructor();
+        constructor(minX : number, minY : number, maxX : number, maxY :number);
+        constructor(minX? : number, minY? : number, maxX? : number, maxY? : number) {
             super();
             this.minX = minX;
             this.minY = minY;
@@ -83,7 +84,7 @@ namespace geom {
                 let rb : RectBounds = new RectBounds(other.getMinX(), other.getMinY(), other.getMaxX(), other.getMaxY());
                 unionWith(rb);
             } else if (other.getBoundsType() == BoundsType.BOX) {
-                let bb :BoxBounds = new BoxBounds((BoxBounds) other);
+                let bb :BoxBounds = new BoxBounds(other);
                 bb.unionWith(this);
                 return bb;
             } else {
@@ -104,10 +105,10 @@ namespace geom {
 
         deriveWithPadding(h: number, v: number, d: number): geom.RectBounds {
             if (d == 0) {
-                grow(h, v);
+                this.grow(h, v);
                 return this;
             }
-            let bb  : BoxBounds = new BoxBounds(this.minX, tihs.minY, 0, this.maxX, this.maxY, 0);
+            let bb  : geom.BoxBounds = new geom.BoxBounds(this.minX, this.minY, 0, this.maxX, this.maxY, 0);
             bb.grow(h, v, d);
             return bb;
         }
@@ -159,6 +160,5 @@ namespace geom {
 
         protected sortMinMax(): void {
         }
-
     }
 }
