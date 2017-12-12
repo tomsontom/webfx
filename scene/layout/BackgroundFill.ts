@@ -1,13 +1,16 @@
-namespace scene.layout {
-    export class BackgroundFill {
-        paint : scene.paint.Paint;
-        cornerRadii: CornerRadii;
-        insets : geometry.Insets;
+import { Paint } from "./../paint/Paint";
+import { CornerRadii } from "./../layout/CornerRadii";
+import { Insets } from "./../../geometry/Insets";
 
-        constructor(paint : scene.paint.Paint, cornerRadii: CornerRadii, insets : geometry.Insets) {
-            this.paint = paint;
-            this.cornerRadii = cornerRadii;
-            this.insets = insets;
-        }
+export class BackgroundFill {
+    paint       : Paint;
+    cornerRadii : CornerRadii;
+    insets      : Insets;
+
+
+    constructor(paint : Paint, cornerRadii: CornerRadii, insets : Insets) {
+        this.paint       = paint;
+        this.cornerRadii = cornerRadii;
+        this.insets      = insets;
     }
 }
