@@ -42,16 +42,18 @@ namespace scene.shape {
     }
 
     export class MoveTo extends PathElement {
-        private x : number;
-        private y : number;
-
+        static  count : number = 0;
+        id            : string;
+        private x     : number;
+        private y     : number;
 
         constructor();
         constructor(x : number, y : number);
         constructor(x? : number, y? : number) {
             super();
-            this.x = x;
-            this.y = y;
+            this.x  = x;
+            this.y  = y;
+            this.id = "MoveTo_" + (MoveTo.count++);
         }
 
 
@@ -81,20 +83,112 @@ namespace scene.shape {
     }
 
     export class LineTo extends PathElement {
+        static  count : number = 0;
+        id            : string;
+        private x     : number;
+        private y     : number;
+
+
+        constructor();
+        constructor(x : number, y : number);
+        constructor(x? : number, y? : number) {
+            super();
+            this.x  = x;
+            this.y  = y;
+            this.id = "LineTo_" + (LineTo.count++);
+        }
+
+
+        getX() : number { return this.x; }
+        setX(x : number) {
+            this.x = x;
+            this.u();
+        }
+
+        getY() : number { return this.y; }
+        setY(y : number) {
+            this.y = y;
+            this.u();
+        }
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
+            if (this.isAbsolute()) {
+                pgPath.addLineTo(this.x, this.y);
+            } else {
+                pgPath.addLineTo((pgPath.currentX + this.x), (pgPath.currentY + this.y));
+            }
+        }
+
+        toString() : string {
+            return " L " + this.x + "," + this.y + " ";
         }
     }
 
     export class HLineTo extends PathElement {
+        static  count : number = 0;
+        id            : string;
+        private x     : number;
+
+
+        constructor();
+        constructor(x : number);
+        constructor(x? : number) {
+            super();
+            this.x  = x;
+            this.id = "HLineTo_" + (HLineTo.count++);
+        }
+
+
+        getX() : number { return this.x; }
+        setX(x : number) {
+            this.x = x;
+            this.u();
+        }
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
+            if (this.isAbsolute()) {
+                pgPath.addLineTo(this.x, pgPath.currentY);
+            } else {
+                pgPath.addLineTo((pgPath.currentX + this.x), pgPath.currentY);
+            }
+        }
+
+        toString() : string {
+            return " H " + this.x + " ";
         }
     }
 
     export class VLineTo extends PathElement {
+        static  count : number = 0;
+        id            : string;
+        private y     : number;
+
+
+        constructor();
+        constructor(y : number);
+        constructor(y? : number) {
+            super();
+            this.y  = y;
+            this.id = "VLineTo_" + (VLineTo.count++);
+        }
+
+
+        getY() : number { return this.y; }
+        setY(y : number) {
+            this.y = y;
+            this.u();
+        }
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
+            if (this.isAbsolute()) {
+                pgPath.addLineTo(pgPath.currentX, this.y);
+            } else {
+                pgPath.addLineTo(pgPath.currentX, (pgPath.currentY + this.y));
+            }
+        }
+
+        toString() : string {
+            return " V " + this.y + " ";
         }
     }
 

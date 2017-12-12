@@ -14,6 +14,10 @@ namespace svgscene.shape {
 
         }
 
+        addLineTo(x : number, y : number) : void {
+
+        }
+
         getDom(): SVGGElement {
             return this.dom;
         }
