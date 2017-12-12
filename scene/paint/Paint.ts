@@ -1,5 +1,3 @@
-namespace scene.paint {
-    export abstract class Paint {
+export abstract class Paint {
 
-    }
 }
