@@ -1,4 +1,5 @@
 namespace scene.shape {
+
     export abstract class PathElement {
 
         impl_nodes : Node[] = [];
@@ -23,7 +24,7 @@ namespace scene.shape {
             })
         }
 
-        abstract addTo(pgPath : NGPath) : void;
+        abstract addTo(pgPath : svgscene.shape.NSVGPath) : void;
 
 
 
@@ -38,5 +39,80 @@ namespace scene.shape {
             return this.absolute == null || this.absolute;
         }
 
+    }
+
+    export class MoveTo extends PathElement {
+        private x : number;
+        private y : number;
+
+
+        constructor();
+        constructor(x : number, y : number);
+        constructor(x? : number, y? : number) {
+            super();
+            this.x = x;
+            this.y = y;
+        }
+
+
+        getX() : number { return this.x; }
+        setX(x : number) {
+            this.x = x;
+            this.u();
+        }
+
+        getY() : number { return this.y; }
+        setY(y : number) {
+            this.y = y;
+            this.u();
+        }
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+            if (this.isAbsolute()) {
+                pgPath.addMoveTo(this.x, this.y);
+            } else {
+                pgPath.addMoveTo((pgPath.currentX + this.x), (pgPath.currentY + this.y));
+            }
+        }
+
+        toString() : string {
+            return " M " + this.x + "," + this.y + " ";
+        }
+    }
+
+    export class LineTo extends PathElement {
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+        }
+    }
+
+    export class HLineTo extends PathElement {
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+        }
+    }
+
+    export class VLineTo extends PathElement {
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+        }
+    }
+
+    export class QuadCurveTo extends PathElement {
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+        }
+    }
+
+    export class CubicCurveTo extends PathElement {
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+        }
+    }
+
+    export class ClosePath extends PathElement {
+
+        addTo(pgPath: svgscene.shape.NSVGPath): void {
+        }
     }
 }

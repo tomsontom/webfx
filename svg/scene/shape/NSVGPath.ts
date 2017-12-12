@@ -4,8 +4,15 @@ namespace svgscene.shape {
         path     : scene.shape.Path;
         dom      : SVGGElement;
         pathNode : SVGPathElement;
+        currentX : number;
+        currentY : number;
 
 
+
+
+        addMoveTo(x : number, y : number) : void {
+
+        }
 
         getDom(): SVGGElement {
             return this.dom;
