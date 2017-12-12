@@ -197,5 +197,13 @@ namespace util {
             }
             return sum;
         }
+
+        static toRadians(degrees : number) : number {
+            return (degrees * Math.PI) / 180;
+        }
+
+        static toDegrees(rads : number) : number{
+            return (rads * 180) / Math.PI;
+        }
     }
 }
