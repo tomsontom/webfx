@@ -20,6 +20,7 @@ namespace scene.paint {
         constructor();
         constructor(red : number, green : number, blue : number, opacity : number);
         constructor(red? : number, green? : number, blue? : number, opacity? : number){
+            super();
             this.red     = red;
             this.green   = green;
             this.blue    = blue;
@@ -148,6 +149,10 @@ namespace scene.paint {
 
         getBrightness() : number {
             return util.Utils.RGBtoHSB(this.red, this.green, this.blue)[2];
+        }
+
+        isOpaque() : boolean {
+            return this.opacity >= 1;
         }
 
         deriveColor(hueShift : number, saturationFactor : number, brightnessFactor : number, opacityFactor : number) : Color {
