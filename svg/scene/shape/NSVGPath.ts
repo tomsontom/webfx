@@ -22,6 +22,14 @@ namespace svgscene.shape {
 
         }
 
+        addCubicTo(ctrlX1 : number, ctrlY1 : number, ctrlX2 : number, ctrlY2 : number, x : number, y : number) : void {
+
+        }
+
+        addCloseTo() {
+
+        }
+
         getDom(): SVGGElement {
             return this.dom;
         }

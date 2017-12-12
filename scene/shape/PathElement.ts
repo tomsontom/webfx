@@ -252,8 +252,77 @@ namespace scene.shape {
     }
 
     export class CubicCurveTo extends PathElement {
+        static  count  : number = 0;
+        id             : string;
+        private ctrlX1 : number;
+        private ctrlY1 : number;
+        private ctrlX2 : number;
+        private ctrlY2 : number;
+        private x      : number;
+        private y      : number;
+
+
+        constructor();
+        constructor(ctrlX1 : number, ctrlY1 : number, ctrlX2 : number, ctrlY2 : number, x : number, y : number);
+        constructor(ctrlX1? : number, ctrlY1? : number, ctrlX2? : number, ctrlY2? : number, x? : number, y? : number) {
+            super();
+            this.ctrlX1 = ctrlX1;
+            this.ctrlY1 = ctrlY1;
+            this.ctrlX2 = ctrlX2;
+            this.ctrlY2 = ctrlY2;
+            this.x      = x;
+            this.y      = y;
+            this.id     = "CurveTo_" + (CubicCurveTo.count++);
+        }
+
+        getControlX1() : number { return this.ctrlX1; }
+        setControlX1(ctrlX1 : number) : void {
+            this.ctrlX1 = ctrlX1;
+            this.u();
+        }
+
+        getControlY1() : number { return this.ctrlY1; }
+        setControlY1(ctrlY1 : number) {
+            this.ctrlY1 = ctrlY1;
+            this.u();
+        }
+
+        getControlX2() : number { return this.ctrlX2; }
+        setControlX2(ctrlX2 : number) : void {
+            this.ctrlX2 = ctrlX2;
+            this.u();
+        }
+
+        getControlY2() : number { return this.ctrlY2; }
+        setControlY2(ctrlY2 : number) {
+            this.ctrlY2 = ctrlY2;
+            this.u();
+        }
+
+        getX() : number { return this.x; }
+        setX(x : number) {
+            this.x = x;
+            this.u();
+        }
+
+        getY() : number { return this.y; }
+        setY(y : number) {
+            this.y = y;
+            this.u();
+        }
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
+            if (this.isAbsolute()) {
+                pgPath.addCubicTo(this.getControlX1(), this.getControlY1(), this.getControlX2(), this.getControlY2(), this.getX(), this.getY());
+            } else {
+                let dx : number = pgPath.currentX;
+                let dy : number = pgPath.currentY;
+                pgPath.addCubicTo((this.ctrlX1 + dx), (this.ctrlY1 + dy), (this.ctrlX2 + dx), (this.ctrlY2 + dy), (this.x + dx), (this.y + dy));
+            }
+        }
+
+        toString() : string {
+            return " C " + this.ctrlX1 + "," + this.ctrlY1 + "," + this.ctrlX2 + "," + this.ctrlY2 + "," + this.x + "," + this.y + " ";
         }
     }
 
