@@ -397,10 +397,10 @@ namespace scene.shape {
         }
 
         addTo(pgPath: svgscene.shape.NSVGPath) : void {
-            this.addArcTo(pgPath, null, pgPath.getCurrentX(), pgPath.getCurrentY());
+            this.addArcTo(pgPath, pgPath.getCurrentX(), pgPath.getCurrentY());
         }
 
-        addArcTo(pgPath: svgscene.shape.NSVGPath, path : Path2D, x0 : number, y0 : number): void {
+        addArcTo(pgPath: svgscene.shape.NSVGPath, x0 : number, y0 : number): void {
             let localX            : number  = this.x;
             let localY            : number  = this.y;
             let localSweepFlag    : boolean = this.sweepFlag;
@@ -413,33 +413,29 @@ namespace scene.shape {
             let dx2 : number = (x0 - xto) / 2.0;
             let dy2 : number = (y0 - yto) / 2.0;
             // Convert angle from degrees to radians
-            let xAxisRotationR : number = Math.toRadians(this.xAxisRotation);
+            let xAxisRotationR : number = util.Utils.toRadians(this.xAxisRotation);
             let cosAngle       : number = Math.cos(xAxisRotationR);
             let sinAngle       : number = Math.sin(xAxisRotationR);
 
             //
             // Step 1 : Compute (x1, y1)
             //
-            final double x1 = ( cosAngle * dx2 + sinAngle * dy2);
-            final double y1 = (-sinAngle * dx2 + cosAngle * dy2);
+            let x1  : number = ( cosAngle * dx2 + sinAngle * dy2);
+            let y1  : number = (-sinAngle * dx2 + cosAngle * dy2);
             // Ensure radii are large enough
-            double rx = Math.abs(getRadiusX());
-            double ry = Math.abs(getRadiusY());
-            double Prx = rx * rx;
-            double Pry = ry * ry;
-            final double Px1 = x1 * x1;
-            final double Py1 = y1 * y1;
+            let rx  : number = Math.abs(this.radiusX);
+            let ry  : number = Math.abs(this.radiusY);
+            let Prx : number = rx * rx;
+            let Pry : number = ry * ry;
+            let Px1 : number = x1 * x1;
+            let Py1 : number = y1 * y1;
             // check that radii are large enough
-            final double radiiCheck = Px1/Prx + Py1/Pry;
+            let radiiCheck : number = Px1/Prx + Py1/Pry;
             if (radiiCheck > 1.0) {
                 rx = Math.sqrt(radiiCheck) * rx;
                 ry = Math.sqrt(radiiCheck) * ry;
                 if (rx == rx && ry == ry) {/* not NANs */} else {
-                    if (pgPath == null) {
-                        path.lineTo((float) xto, (float) yto);
-                    } else {
-                        pgPath.addLineTo((float) xto, (float) yto);
-                    }
+                    pgPath.addLineTo(xto, yto);
                     return;
                 }
                 Prx = rx * rx;
@@ -449,39 +445,39 @@ namespace scene.shape {
             //
             // Step 2 : Compute (cx1, cy1)
             //
-            double sign = ((localLargeArcFlag == localSweepFlag) ? -1.0 : 1.0);
-            double sq = ((Prx*Pry)-(Prx*Py1)-(Pry*Px1)) / ((Prx*Py1)+(Pry*Px1));
+            let sign : number = ((localLargeArcFlag == localSweepFlag) ? -1.0 : 1.0);
+            let sq   : number = ((Prx*Pry)-(Prx*Py1)-(Pry*Px1)) / ((Prx*Py1)+(Pry*Px1));
             sq = (sq < 0.0) ? 0.0 : sq;
-            final double coef = (sign * Math.sqrt(sq));
-            final double cx1 = coef * ((rx * y1) / ry);
-            final double cy1 = coef * -((ry * x1) / rx);
+            let coef : number = (sign * Math.sqrt(sq));
+            let cx1  : number = coef * ((rx * y1) / ry);
+            let cy1  : number = coef * -((ry * x1) / rx);
 
             //
             // Step 3 : Compute (cx, cy) from (cx1, cy1)
             //
-            final double sx2 = (x0 + xto) / 2.0;
-            final double sy2 = (y0 + yto) / 2.0;
-            final double cx = sx2 + (cosAngle * cx1 - sinAngle * cy1);
-            final double cy = sy2 + (sinAngle * cx1 + cosAngle * cy1);
+            let sx2 : number = (x0 + xto) / 2.0;
+            let sy2 : number = (y0 + yto) / 2.0;
+            let cx  : number = sx2 + (cosAngle * cx1 - sinAngle * cy1);
+            let cy  : number = sy2 + (sinAngle * cx1 + cosAngle * cy1);
 
             //
             // Step 4 : Compute the angleStart (angle1) and the angleExtent (dangle)
             //
-            final double ux = (x1 - cx1) / rx;
-            final double uy = (y1 - cy1) / ry;
-            final double vx = (-x1 - cx1) / rx;
-            final double vy = (-y1 - cy1) / ry;
+            let ux : number = (x1 - cx1) / rx;
+            let uy : number = (y1 - cy1) / ry;
+            let vx : number = (-x1 - cx1) / rx;
+            let vy : number = (-y1 - cy1) / ry;
             // Compute the angle start
-            double n = Math.sqrt((ux * ux) + (uy * uy));
-            double p = ux; // (1 * ux) + (0 * uy)
+            let n  : number = Math.sqrt((ux * ux) + (uy * uy));
+            let p  : number = ux; // (1 * ux) + (0 * uy)
             sign = ((uy < 0.0) ? -1.0 : 1.0);
-            double angleStart = Math.toDegrees(sign * Math.acos(p / n));
+            let angleStart : number = util.Utils.toDegrees(sign * Math.acos(p / n));
 
             // Compute the angle extent
             n = Math.sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
             p = ux * vx + uy * vy;
             sign = ((ux * vy - uy * vx < 0.0) ? -1.0 : 1.0);
-            double angleExtent = Math.toDegrees(sign * Math.acos(p / n));
+            let angleExtent : number = util.Utils.toDegrees(sign * Math.acos(p / n));
             if (!localSweepFlag && (angleExtent > 0)) {
                 angleExtent -= 360.0;
             } else if (localSweepFlag && (angleExtent < 0)) {
@@ -493,29 +489,14 @@ namespace scene.shape {
             //
             // We can now build the resulting Arc2D
             //
-            final float arcX = (float) (cx - rx);
-            final float arcY = (float) (cy - ry);
-            final float arcW = (float) (rx * 2.0);
-            final float arcH = (float) (ry * 2.0);
-            final float arcStart = (float) -angleStart;
-            final float arcExtent = (float) -angleExtent;
+            let arcX      : number = (cx - rx);
+            let arcY      : number = (cy - ry);
+            let arcW      : number = (rx * 2.0);
+            let arcH      : number = (ry * 2.0);
+            let arcStart  : number = -angleStart;
+            let arcExtent : number = -angleExtent;
 
-            if (pgPath == null) {
-                final Arc2D arc =
-                    new Arc2D(arcX, arcY, arcW, arcH,
-                        arcStart, arcExtent, Arc2D.OPEN);
-                BaseTransform xform = (xAxisRotationR == 0) ? null :
-                    BaseTransform.getRotateInstance(xAxisRotationR, cx, cy);
-                PathIterator pi = arc.getPathIterator(xform);
-                // RT-8926, append(true) converts the initial moveTo into a
-                // lineTo which can generate huge miter joins if the segment
-                // is small enough.  So, we manually skip it here instead.
-                pi.next();
-                path.append(pi, true);
-            } else {
-                pgPath.addArcTo(arcX, arcY, arcW, arcH,
-                    arcStart, arcExtent, (float) xAxisRotationR);
-            }
+            pgPath.addArcTo(arcX, arcY, arcW, arcH, arcStart, arcExtent, xAxisRotationR);
         }
 
         toString() : string {
