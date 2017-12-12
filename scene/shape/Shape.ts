@@ -54,24 +54,17 @@ namespace scene.shape {
             this.strokeMiterLimit = Shape.DEFAULT_STROKE_MITER_LIMIT;
             this.strokeDashOffset = Shape.DEFAULT_STROKE_DASH_OFFSET;
             this.strokeDashArray  = Shape.DEFAULT_STROKE_DASH_ARRAY;
-            this.fill             = scene.paint.Color.BLACK;
-            this.stroke           = scene.paint.Color.BLACK;
         }
 
 
-
-
-        computeMode() : ComputeMode {
-            if (this.fill != null && this.stroke != null) {
-                return ComputeMode.STROKE_FILL;
-            } else if (this.fill != null) {
-                return ComputeMode.FILL;
-            } else if (this.stroke != null) {
-                return ComputeMode.STROKE;
-            } else {
-                return ComputeMode.EMPTY;
-            }
+        getFill() : scene.paint.Paint { return this.fill; }
+        setFill(fill : scene.paint.Paint) {
+            this.fill = fill;
         }
 
+        getStroke() : scene.paint.Paint { return this.stroke; }
+        setStroke(stroke : scene.paint.Paint) {
+            this.stroke = stroke;
+        }
     }
 }

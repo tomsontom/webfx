@@ -41,8 +41,6 @@ namespace svgscene {
 
         abstract getDom() : SVGGElement;
 
-        sync() {
-            
-        }
+        sync() {}
     }
 }

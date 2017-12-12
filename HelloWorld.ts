@@ -45,6 +45,19 @@ function run() {
     path.add(new scene.shape.ClosePath());
     path.resize(400, 400);
 
+    var fillGradient = new scene.paint.LinearGradient(0, 0, 0, 1, true, scene.paint.CycleMethod.NO_CYCLE, [
+                                                       new scene.paint.Stop(0, scene.paint.Color.RED),
+                                                       new scene.paint.Stop(1, scene.paint.Color.BLUE)
+                                                       ]);
+    var strokeGradient = new scene.paint.LinearGradient(0, 0, 1, 0, true, scene.paint.CycleMethod.NO_CYCLE, [
+                                                        new scene.paint.Stop(0, scene.paint.Color.LIME),
+                                                        new scene.paint.Stop(1, scene.paint.Color.ORANGE)
+                                                        ]);
+
+    path.setFill(fillGradient);
+    path.setStroke(strokeGradient);
+
+
     var svgPath = document.getElementById("path");
     svgPath.appendChild((path.getNgNode() as svgscene.shape.NSVGPath).getDom());
 

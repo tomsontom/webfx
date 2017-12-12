@@ -6,16 +6,18 @@ namespace scene.text {
         prefHeight(width: number) : number;
     }
     export class Text extends scene.shape.Shape {
-        text : string;
-        ng : NGText;
-        width: number;
-        height: number;
+        text   : string;
+        ng     : NGText;
+        width  : number;
+        height : number;
+
 
         constructor(text : string) {
             super();
-            this.ng = new svgscene.text.NSVGText(this);
+            this.ng   = new svgscene.text.NSVGText(this);
             this.text = text;
         }
+
 
         setText(text : string) {
             this.text = text;
@@ -28,7 +30,7 @@ namespace scene.text {
 
         resize(width: number, height: number) {
             console.log("Resize: ", width, " x ", height);
-            this.width = width;
+            this.width  = width;
             this.height = height;
             this.ng.sync();
         }

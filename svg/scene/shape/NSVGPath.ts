@@ -4,6 +4,8 @@ namespace svgscene.shape {
         currentX       : number;
         currentY       : number;
         path           : scene.shape.Path;
+        dom            : SVGGElement;
+        defs           : SVGDefsElement;
         pathNode       : SVGPathElement;
         private fill   : scene.paint.Paint;
         private stroke : scene.paint.Paint;
@@ -16,8 +18,17 @@ namespace svgscene.shape {
             this.fill     = scene.paint.Color.BLACK;
             this.stroke   = scene.paint.Color.BLACK;
             this.path     = path;
+
+            this.dom      = NSVGNode.createGElement();
+
+            this.defs     = NSVGNode.createDefsElement();
+            this.defs.setAttribute("id", "defs_" + this.path.id);
+
             this.pathNode = NSVGNode.createPathElement();
             this.pathNode.setAttribute("d","");
+
+            this.dom.appendChild(this.defs);
+            this.dom.appendChild(this.pathNode);
         }
 
 
@@ -93,6 +104,7 @@ namespace svgscene.shape {
                 .forEach((stop) => {
                     svgLg.appendChild(stop);
                 });
+                this.defs.appendChild(svgLg);
                 this.pathNode.setAttribute("fill", "url(#" + lg.id + ")");
             } else if (fill instanceof scene.paint.RadialGradient) {
                 var rg    = fill as scene.paint.RadialGradient;
@@ -114,6 +126,7 @@ namespace svgscene.shape {
                 .forEach((stop) => {
                     svgRg.appendChild(stop);
                 });
+                this.defs.appendChild(svgRg);
                 this.pathNode.setAttribute("fill", "url(#" + rg.id + ")");
             }
         }
@@ -143,6 +156,7 @@ namespace svgscene.shape {
                     .forEach((stop) => {
                         svgLg.appendChild(stop);
                     });
+                this.defs.appendChild(svgLg);
                 this.pathNode.setAttribute("stroke", "url(#" + lg.id + ")");
             } else if (stroke instanceof scene.paint.RadialGradient) {
                 var rg    = stroke as scene.paint.RadialGradient;
@@ -164,6 +178,7 @@ namespace svgscene.shape {
                     .forEach((stop) => {
                         svgRg.appendChild(stop);
                     });
+                this.defs.appendChild(svgRg);
                 this.pathNode.setAttribute("stroke", "url(#" + rg.id + ")");
             }
         }
@@ -184,7 +199,6 @@ namespace svgscene.shape {
             return this.path;
         }
 
-
         getShape() : scene.shape.Shape {
             return null//this.path;
         }
@@ -202,7 +216,7 @@ namespace svgscene.shape {
         }
 
         getDom(): SVGGElement {
-            return this.pathNode;
+            return this.dom;
         }
 
         sync() {

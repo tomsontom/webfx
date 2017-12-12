@@ -9,11 +9,13 @@ namespace scene.shape {
     }
 
     export class Path extends Shape implements NGPath {
-        ng       : svgscene.shape.NSVGPath;
-        elements : PathElement[];
-        fillRule : FillRule;
-        width    : number;
-        height   : number;
+        static count : number = 0;
+        id           : string;
+        ng           : svgscene.shape.NSVGPath;
+        elements     : PathElement[];
+        fillRule     : FillRule;
+        width        : number;
+        height       : number;
 
 
         constructor();
@@ -26,6 +28,7 @@ namespace scene.shape {
             } else {
                 this.elements = elements;
             }
+            this.id = "Path_" + (Path.count++);
         }
 
 
@@ -76,6 +79,18 @@ namespace scene.shape {
 
         prefWidth(height: number) : number {
             return this.ng.prefWidth(height);
+        }
+
+        getFill() { return this.ng.getFill(); }
+        setFill(fill : scene.paint.Paint) {
+            this.fill = fill;
+            this.ng.setFill(fill);
+        }
+
+        getStroke() { return this.ng.getStroke(); }
+        setStroke(stroke : scene.paint.Paint) {
+            this.stroke = stroke;
+            this.ng.setStroke(stroke);
         }
 
         sync() {
