@@ -3,6 +3,10 @@ namespace svgscene {
     export abstract class NSVGNode implements scene.NGNode {
         static ns = 'http://www.w3.org/2000/svg';
 
+        static createPathElement() : SVGPathElement {
+            return document.createElementNS(NSVGNode.ns, 'path') as SVGPathElement;
+        }
+
         static createGElement() : SVGGElement {
             return document.createElementNS(NSVGNode.ns, 'g') as SVGAElement;
         }
