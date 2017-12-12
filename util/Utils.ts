@@ -205,5 +205,12 @@ namespace util {
         static toDegrees(rads : number) : number{
             return (rads * 180) / Math.PI;
         }
+
+        static proportionalize(v: number, proportional: boolean) {
+            if (proportional) {
+                return v * 100 + "%";
+            }
+            return v + "";
+        }
     }
 }

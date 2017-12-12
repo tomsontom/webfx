@@ -71,13 +71,42 @@ namespace svgscene.shape {
         getFill() : scene.paint.Paint { return this.fill; }
         setFill(fill : scene.paint.Paint) {
             this.fill = fill;
-            //TODO: add gradient or color to svg fill
+            if (fill instanceof scene.paint.Color) {
+
+            } else if (fill instanceof scene.paint.LinearGradient) {
+                var lg     = fill as scene.paint.LinearGradient;
+                var e      = NSVGNode.createLinearGradientElement();
+                var suffix = lg.proportional ? "%" : "";
+                e.setAttribute("x1", util.Utils.proportionalize(lg.startX, lg.proportional));
+                e.setAttribute("x2", util.Utils.proportionalize(lg.endX, lg.proportional));
+                e.setAttribute("y1", util.Utils.proportionalize(lg.startY, lg.proportional));
+                e.setAttribute("y2", util.Utils.proportionalize(lg.endY, lg.proportional));
+                e.setAttribute("id", lg.id);
+
+                lg.stops.map((stop) => {
+                    var s = NSVGNode.createStopElement();
+                    s.setAttribute("offset", util.Utils.proportionalize(stop.offset, lg.proportional));
+                    s.setAttribute("stop-color", stop.color.toRGBAString());
+                    return s;
+                })
+                .forEach((stop) => {
+                    e.appendChild(stop);
+                });
+            } else if (fill instanceof scene.paint.RadialGradient) {
+
+            }
         }
 
         getStroke() : scene.paint.Paint { return this.stroke; }
         setStroke(stroke : scene.paint.Paint) {
             this.stroke = stroke;
-            //TODO: add gradient or color to svg stroke
+            if (stroke instanceof scene.paint.Color) {
+
+            } else if (stroke instanceof scene.paint.LinearGradient) {
+
+            } else if (stroke instanceof scene.paint.RadialGradient) {
+
+            }
         }
 
         reset() : void {

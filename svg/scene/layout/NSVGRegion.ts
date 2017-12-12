@@ -22,14 +22,7 @@ namespace svgscene.layout {
             this.dom.appendChild(this.rootRect);
             this.dom.appendChild(this.colorContainer);
         }
-
-        static value(v: number, proportional: boolean) {
-            if (proportional) {
-                return v * 100 + "%";
-            }
-            return v + "";
-        }
-
+        
         syncChildren() {
             this.children.forEach(n => {
                 this.dom.removeChild(n.getDom());
@@ -72,15 +65,15 @@ namespace svgscene.layout {
                         var lg     = paint as scene.paint.LinearGradient;
                         var e      = NSVGNode.createLinearGradientElement();
                         var suffix = lg.proportional ? "%" : "";
-                        e.setAttribute("x1", NSVGRegion.value(lg.startX, lg.proportional));
-                        e.setAttribute("x2", NSVGRegion.value(lg.endX, lg.proportional));
-                        e.setAttribute("y1", NSVGRegion.value(lg.startY, lg.proportional));
-                        e.setAttribute("y2", NSVGRegion.value(lg.endY, lg.proportional));
+                        e.setAttribute("x1", util.Utils.proportionalize(lg.startX, lg.proportional));
+                        e.setAttribute("x2", util.Utils.proportionalize(lg.endX, lg.proportional));
+                        e.setAttribute("y1", util.Utils.proportionalize(lg.startY, lg.proportional));
+                        e.setAttribute("y2", util.Utils.proportionalize(lg.endY, lg.proportional));
                         e.setAttribute("id", lg.id);
 
                         lg.stops.map((stop) => {
                             var s = NSVGNode.createStopElement();
-                            s.setAttribute("offset", NSVGRegion.value(stop.offset, lg.proportional));
+                            s.setAttribute("offset", util.Utils.proportionalize(stop.offset, lg.proportional));
                             s.setAttribute("stop-color", stop.color.toRGBAString());
                             return s;
                         })
