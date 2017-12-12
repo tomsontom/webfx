@@ -326,10 +326,211 @@ namespace scene.shape {
         }
     }
 
+    export class ArcTo extends PathElement {
+        static  count         : number = 0;
+        id                    : string;
+        private radiusX       : number;
+        private radiusY       : number;
+        private xAxisRotation : number;
+        private x             : number;
+        private y             : number;
+        private largeArcFlag  : boolean;
+        private sweepFlag     : boolean;
+
+
+        constructor();
+        constructor(radiusX : number, radiusY : number, xAxisRotation : number,
+        x : number, y : number, largeArcFlag : boolean, sweepFlag : boolean);
+        constructor(radiusX? : number, radiusY? : number, xAxisRotation? : number,
+                    x? : number, y? : number, largeArcFlag? : boolean, sweepFlag? : boolean) {
+            super();
+            this.radiusX       = radiusX;
+            this.radiusY       = radiusY;
+            this.xAxisRotation = xAxisRotation;
+            this.x             = x;
+            this.y             = y;
+            this.largeArcFlag  = largeArcFlag;
+            this.sweepFlag     = sweepFlag;
+            this.id            = "ArcTo_" + (ArcTo.count++);
+        }
+
+        getRadiusX() : number { return this.radiusX; }
+        setRadiusX(radiusX : number) {
+            this.radiusX = radiusX;
+            this.u();
+        }
+
+        getRadiusY() { return this.radiusY; }
+        setRadiusY(radiusY : number) {
+            this.radiusY = radiusY;
+            this.u();
+        }
+
+        getXAxisRotation() { return this.xAxisRotation; }
+        setXAxisRotation(xAxisRotation : number) {
+            this.xAxisRotation = xAxisRotation;
+            this.u();
+        }
+
+        getX() : number { return this.x; }
+        setX(x : number) {
+            this.x = x;
+            this.u();
+        }
+
+        getY() : number { return this.y; }
+        setY(y : number) {
+            this.y = y;
+            this.u();
+        }
+
+        isLargeArcFlag() : boolean { return this.largeArcFlag; }
+        setLargeArcFlag(largeArcFlag : boolean) {
+            this.largeArcFlag = largeArcFlag;
+            this.u();
+        }
+
+        isSweepFlag() : boolean { return this.sweepFlag; }
+        setSweepFlag(sweepFlag : boolean) {
+            this.sweepFlag = sweepFlag;
+            this.u();
+        }
+
+        addTo(pgPath: svgscene.shape.NSVGPath) : void {
+            this.addArcTo(pgPath, null, pgPath.getCurrentX(), pgPath.getCurrentY());
+        }
+
+        addArcTo(pgPath: svgscene.shape.NSVGPath, path : Path2D, x0 : number, y0 : number): void {
+            let localX            : number  = this.x;
+            let localY            : number  = this.y;
+            let localSweepFlag    : boolean = this.sweepFlag;
+            let localLargeArcFlag : boolean = this.largeArcFlag;
+
+            // Determine target "to" position
+            let xto : number = this.absolute ? localX : localX + x0;
+            let yto : number = this.absolute ? localY : localY + y0;
+            // Compute the half distance between the current and the final point
+            let dx2 : number = (x0 - xto) / 2.0;
+            let dy2 : number = (y0 - yto) / 2.0;
+            // Convert angle from degrees to radians
+            let xAxisRotationR : number = Math.toRadians(this.xAxisRotation);
+            let cosAngle       : number = Math.cos(xAxisRotationR);
+            let sinAngle       : number = Math.sin(xAxisRotationR);
+
+            //
+            // Step 1 : Compute (x1, y1)
+            //
+            final double x1 = ( cosAngle * dx2 + sinAngle * dy2);
+            final double y1 = (-sinAngle * dx2 + cosAngle * dy2);
+            // Ensure radii are large enough
+            double rx = Math.abs(getRadiusX());
+            double ry = Math.abs(getRadiusY());
+            double Prx = rx * rx;
+            double Pry = ry * ry;
+            final double Px1 = x1 * x1;
+            final double Py1 = y1 * y1;
+            // check that radii are large enough
+            final double radiiCheck = Px1/Prx + Py1/Pry;
+            if (radiiCheck > 1.0) {
+                rx = Math.sqrt(radiiCheck) * rx;
+                ry = Math.sqrt(radiiCheck) * ry;
+                if (rx == rx && ry == ry) {/* not NANs */} else {
+                    if (pgPath == null) {
+                        path.lineTo((float) xto, (float) yto);
+                    } else {
+                        pgPath.addLineTo((float) xto, (float) yto);
+                    }
+                    return;
+                }
+                Prx = rx * rx;
+                Pry = ry * ry;
+            }
+
+            //
+            // Step 2 : Compute (cx1, cy1)
+            //
+            double sign = ((localLargeArcFlag == localSweepFlag) ? -1.0 : 1.0);
+            double sq = ((Prx*Pry)-(Prx*Py1)-(Pry*Px1)) / ((Prx*Py1)+(Pry*Px1));
+            sq = (sq < 0.0) ? 0.0 : sq;
+            final double coef = (sign * Math.sqrt(sq));
+            final double cx1 = coef * ((rx * y1) / ry);
+            final double cy1 = coef * -((ry * x1) / rx);
+
+            //
+            // Step 3 : Compute (cx, cy) from (cx1, cy1)
+            //
+            final double sx2 = (x0 + xto) / 2.0;
+            final double sy2 = (y0 + yto) / 2.0;
+            final double cx = sx2 + (cosAngle * cx1 - sinAngle * cy1);
+            final double cy = sy2 + (sinAngle * cx1 + cosAngle * cy1);
+
+            //
+            // Step 4 : Compute the angleStart (angle1) and the angleExtent (dangle)
+            //
+            final double ux = (x1 - cx1) / rx;
+            final double uy = (y1 - cy1) / ry;
+            final double vx = (-x1 - cx1) / rx;
+            final double vy = (-y1 - cy1) / ry;
+            // Compute the angle start
+            double n = Math.sqrt((ux * ux) + (uy * uy));
+            double p = ux; // (1 * ux) + (0 * uy)
+            sign = ((uy < 0.0) ? -1.0 : 1.0);
+            double angleStart = Math.toDegrees(sign * Math.acos(p / n));
+
+            // Compute the angle extent
+            n = Math.sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
+            p = ux * vx + uy * vy;
+            sign = ((ux * vy - uy * vx < 0.0) ? -1.0 : 1.0);
+            double angleExtent = Math.toDegrees(sign * Math.acos(p / n));
+            if (!localSweepFlag && (angleExtent > 0)) {
+                angleExtent -= 360.0;
+            } else if (localSweepFlag && (angleExtent < 0)) {
+                angleExtent += 360.0;
+            }
+            angleExtent = angleExtent % 360;
+            angleStart = angleStart % 360;
+
+            //
+            // We can now build the resulting Arc2D
+            //
+            final float arcX = (float) (cx - rx);
+            final float arcY = (float) (cy - ry);
+            final float arcW = (float) (rx * 2.0);
+            final float arcH = (float) (ry * 2.0);
+            final float arcStart = (float) -angleStart;
+            final float arcExtent = (float) -angleExtent;
+
+            if (pgPath == null) {
+                final Arc2D arc =
+                    new Arc2D(arcX, arcY, arcW, arcH,
+                        arcStart, arcExtent, Arc2D.OPEN);
+                BaseTransform xform = (xAxisRotationR == 0) ? null :
+                    BaseTransform.getRotateInstance(xAxisRotationR, cx, cy);
+                PathIterator pi = arc.getPathIterator(xform);
+                // RT-8926, append(true) converts the initial moveTo into a
+                // lineTo which can generate huge miter joins if the segment
+                // is small enough.  So, we manually skip it here instead.
+                pi.next();
+                path.append(pi, true);
+            } else {
+                pgPath.addArcTo(arcX, arcY, arcW, arcH,
+                    arcStart, arcExtent, (float) xAxisRotationR);
+            }
+        }
+
+        toString() : string {
+            return " A " + this.radiusX + "," + this.radiusY + "," + this.xAxisRotation + "," + this.largeArcFlag ? "1" : "0" + "," + this.sweepFlag ? "1" : "0" + "," + this.x + "," + this.y + " ";
+        }
+    }
+
     export class ClosePath extends PathElement {
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
             pgPath.addClosePath();
+        }
+
+        toString() : string {
+            return " Z ";
         }
     }
 }
