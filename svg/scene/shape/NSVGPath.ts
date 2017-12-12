@@ -1,16 +1,20 @@
 namespace svgscene.shape {
 
     export class NSVGPath extends NSVGNode {
-        currentX : number;
-        currentY : number;
-        path     : scene.shape.Path;
-        pathNode : SVGPathElement;
+        currentX       : number;
+        currentY       : number;
+        path           : scene.shape.Path;
+        pathNode       : SVGPathElement;
+        private fill   : scene.paint.Paint;
+        private stroke : scene.paint.Paint;
 
 
         constructor(path : scene.shape.Path) {
             super();
             this.currentX = 0;
             this.currentY = 0;
+            this.fill     = scene.paint.Color.BLACK;
+            this.stroke   = scene.paint.Color.BLACK;
             this.path     = path;
             this.pathNode = NSVGNode.createPathElement();
             this.pathNode.setAttribute("d","");
@@ -62,6 +66,18 @@ namespace svgscene.shape {
             let d = this.pathNode.getAttribute("d");
             d += "Z ";
             this.pathNode.setAttribute("d", d);
+        }
+
+        getFill() : scene.paint.Paint { return this.fill; }
+        setFill(fill : scene.paint.Paint) {
+            this.fill = fill;
+            //TODO: add gradient or color to svg fill
+        }
+
+        getStroke() : scene.paint.Paint { return this.stroke; }
+        setStroke(stroke : scene.paint.Paint) {
+            this.stroke = stroke;
+            //TODO: add gradient or color to svg stroke
         }
 
         reset() : void {
