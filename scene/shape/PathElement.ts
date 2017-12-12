@@ -1,7 +1,9 @@
 namespace scene.shape {
 
-    export abstract class PathElement {
+    export enum ElementType { MOVE_TO, LINE_TO, H_LINE_TO, V_LINE_TO, QUAD_TO, CUBIC_TO, ARC_TO, CLOSE }
 
+    export abstract class PathElement {
+        type       : ElementType;
         impl_nodes : Node[] = [];
         absolute   : boolean;
 
@@ -44,6 +46,7 @@ namespace scene.shape {
     export class MoveTo extends PathElement {
         static  count : number = 0;
         id            : string;
+        type          : ElementType.MOVE_TO;
         private x     : number;
         private y     : number;
 
@@ -85,6 +88,7 @@ namespace scene.shape {
     export class LineTo extends PathElement {
         static  count : number = 0;
         id            : string;
+        type          : ElementType.LINE_TO;
         private x     : number;
         private y     : number;
 
@@ -127,6 +131,7 @@ namespace scene.shape {
     export class HLineTo extends PathElement {
         static  count : number = 0;
         id            : string;
+        type          : ElementType.H_LINE_TO;
         private x     : number;
 
 
@@ -161,6 +166,7 @@ namespace scene.shape {
     export class VLineTo extends PathElement {
         static  count : number = 0;
         id            : string;
+        type          : ElementType.V_LINE_TO;
         private y     : number;
 
 
@@ -195,6 +201,7 @@ namespace scene.shape {
     export class QuadCurveTo extends PathElement {
         static  count : number = 0;
         id            : string;
+        type          : ElementType.QUAD_TO;
         private ctrlX : number;
         private ctrlY : number;
         private x     : number;
@@ -254,6 +261,7 @@ namespace scene.shape {
     export class CubicCurveTo extends PathElement {
         static  count  : number = 0;
         id             : string;
+        type          : ElementType.CUBIC_TO;
         private ctrlX1 : number;
         private ctrlY1 : number;
         private ctrlX2 : number;
@@ -329,6 +337,7 @@ namespace scene.shape {
     export class ArcTo extends PathElement {
         static  count         : number = 0;
         id                    : string;
+        type                  : ElementType.ARC_TO;
         private radiusX       : number;
         private radiusY       : number;
         private xAxisRotation : number;
@@ -397,7 +406,8 @@ namespace scene.shape {
         }
 
         addTo(pgPath: svgscene.shape.NSVGPath) : void {
-            this.addArcTo(pgPath, pgPath.getCurrentX(), pgPath.getCurrentY());
+            pgPath.addArcTo(this.radiusX, this.radiusY, this.xAxisRotation, this.largeArcFlag, this.sweepFlag, this.x, this.y);
+            //this.addArcTo(pgPath, pgPath.currentX, pgPath.currentY);
         }
 
         addArcTo(pgPath: svgscene.shape.NSVGPath, x0 : number, y0 : number): void {
@@ -496,7 +506,7 @@ namespace scene.shape {
             let arcStart  : number = -angleStart;
             let arcExtent : number = -angleExtent;
 
-            pgPath.addArcTo(arcX, arcY, arcW, arcH, arcStart, arcExtent, xAxisRotationR);
+            //pgPath.addArcTo(arcX, arcY, arcW, arcH, arcStart, arcExtent, xAxisRotationR);
         }
 
         toString() : string {
@@ -505,6 +515,8 @@ namespace scene.shape {
     }
 
     export class ClosePath extends PathElement {
+
+        type : ElementType.CLOSE;
 
         addTo(pgPath: svgscene.shape.NSVGPath): void {
             pgPath.addClosePath();

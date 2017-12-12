@@ -1,6 +1,7 @@
 /// <reference path="./scene/layout/Region.ts" />
 /// <reference path="./scene/text/Text.ts" />
 /// <reference path="./scene/control/Button.ts" />
+/// <reference path="./scene/shape/PathElement.ts" />
 
 
 function run() {
@@ -37,4 +38,15 @@ function run() {
     ctx.strokeStyle = 'black';
     ctx.font = '48px sans-serf';
     ctx.strokeText('WebFX is fun', 125, 75);
+
+    var path = new scene.shape.Path();
+    path.add(new scene.shape.MoveTo(10, 10));
+    path.add(new scene.shape.LineTo(100, 100));
+    path.add(new scene.shape.LineTo(10, 200));
+    path.add(new scene.shape.ClosePath());
+
+    var svgPath = document.getElementById("path");
+    svgPath.appendChild((path.getNgNode() as svgscene.shape.NSVGPath).getDom());
+
+    console.log(path.elements);
 }

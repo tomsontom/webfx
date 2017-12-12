@@ -5,12 +5,14 @@ namespace scene.canvas {
         width : number;
         height: number;
 
+
         constructor(width: number, height: number) {
             super();
             this.ng     = new svgscene.canvas.NSVGCanvas(this, width, height);
             this.width  = width == null ? 0 : width;
             this.height = width == null ? 0 : height;
         }
+
 
         getGraphicsContext2D() : CanvasRenderingContext2D {
             return this.ng.getGraphicsContext2D();

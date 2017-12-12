@@ -1,11 +1,10 @@
 namespace svgscene.shape {
 
     export class NSVGPath extends NSVGNode {
-        private currentX : number;
-        private currentY : number;
-        path             : scene.shape.Path;
-        dom              : SVGGElement;
-        pathNode         : SVGPathElement;
+        currentX : number;
+        currentY : number;
+        path     : scene.shape.Path;
+        pathNode : SVGPathElement;
 
 
         constructor(path : scene.shape.Path) {
@@ -13,12 +12,8 @@ namespace svgscene.shape {
             this.currentX = 0;
             this.currentY = 0;
             this.path     = path;
-            this.dom      = NSVGNode.createGElement();
             this.pathNode = NSVGNode.createPathElement();
-            this.pathNode.setAttribute("font-family","Roboto");
-            this.pathNode.setAttribute("font-size","15px");
-            this.pathNode.setAttribute("x","0");
-            this.dom.appendChild(this.pathNode);
+            this.pathNode.setAttribute("d","");
         }
 
 
@@ -81,14 +76,6 @@ namespace svgscene.shape {
             this.pathNode.setAttribute("fill-rule", fillRule == scene.shape.FillRule.EVEN_ODD ? "evenodd" : "nonzero");
         }
 
-        getCurrentX() : number {
-            return this.currentX;
-        }
-
-        getCurrentY() : number {
-            return this.currentY;
-        }
-
         getGeometry() : scene.shape.Path {
             return this.path;
         }
@@ -103,7 +90,7 @@ namespace svgscene.shape {
         }
 
         getDom(): SVGGElement {
-            return this.dom;
+            return this.pathNode;
         }
 
         sync() {
