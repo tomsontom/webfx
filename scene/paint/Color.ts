@@ -1,5 +1,7 @@
+/// <reference path="./Paint.ts" />
+
 namespace scene.paint {
-    export class Color {
+    export class Color extends Paint {
         private static readonly DARKER_BRIGHTER_FACTOR     : number = 0.7;
         private static readonly SATURATE_DESATURATE_FACTOR : number = 0.7;
         private static readonly PARSE_COMPONENT            : number = 0; // percent, or clamped to [0,255] => [0,1]
@@ -7,16 +9,22 @@ namespace scene.paint {
         private static readonly PARSE_ANGLE                : number = 2; // clamped to [0,360]
         private static readonly PARSE_ALPHA                : number = 3; // clamped to [0.0,1.0]
 
+        static count : number = 0;
+
         red    : number;
         green  : number;
         blue   : number;
         opacity: number;
+        id     : string;
 
-        constructor(red: number, green: number, blue: number, opacity: number) {
-            this.red = red;
-            this.green = green;
-            this.blue = blue;
+        constructor();
+        constructor(red : number, green : number, blue : number, opacity : number);
+        constructor(red? : number, green? : number, blue? : number, opacity? : number){
+            this.red     = red;
+            this.green   = green;
+            this.blue    = blue;
             this.opacity = opacity;
+            this.id      = "Color_" + (Color.count++);
         }
 
         static color(red : number, green : number, blue : number, opacity? : number) : Color {
