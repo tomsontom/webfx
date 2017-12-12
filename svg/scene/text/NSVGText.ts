@@ -14,7 +14,6 @@ namespace svgscene.text {
             this.textNode.setAttribute("font-family","Roboto");
             this.textNode.setAttribute("font-size","15px");
             this.textNode.setAttribute("x","0");
-            this.textNode.setAttribute("dominant-baseline","hanging");
             this.dom.appendChild(this.textNode);
         }
 
