@@ -3,6 +3,6 @@ namespace scene.shape {
         
     }
     export abstract class Shape extends Node {
-
+        elements : PathElement[];
     }
 }
