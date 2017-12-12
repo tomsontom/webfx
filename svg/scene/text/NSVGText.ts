@@ -19,7 +19,8 @@ namespace svgscene.text {
         }
 
         prefHeight(width: number) {
-            console.log("prefheight:", this.textNode.getBBox());
+            console.log("prefheight - bbox:", this.textNode.getBBox());
+            console.log("prefheight - clientrect:", this.textNode.getBoundingClientRect());
             return this.textNode.getBBox().height;
         }
 
@@ -32,6 +33,8 @@ namespace svgscene.text {
         }
 
         sync() {
+            this.textNode.setAttribute("x", this.textNode.getBBox().x*-1+"");
+            this.textNode.setAttribute("y",this.textNode.getBBox().y*-1+"");
             while( this.textNode.firstChild ) {
                 this.textNode.removeChild(this.textNode.firstChild);
             }
