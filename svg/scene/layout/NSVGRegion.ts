@@ -22,7 +22,7 @@ namespace svgscene.layout {
             this.dom.appendChild(this.rootRect);
             this.dom.appendChild(this.colorContainer);
         }
-        
+
         syncChildren() {
             this.children.forEach(n => {
                 this.dom.removeChild(n.getDom());
@@ -62,9 +62,8 @@ namespace svgscene.layout {
                         return paint instanceof scene.paint.LinearGradient;
                     })
                     .map((paint) => {
-                        var lg     = paint as scene.paint.LinearGradient;
-                        var e      = NSVGNode.createLinearGradientElement();
-                        var suffix = lg.proportional ? "%" : "";
+                        var lg = paint as scene.paint.LinearGradient;
+                        var e  = NSVGNode.createLinearGradientElement();
                         e.setAttribute("x1", util.Utils.proportionalize(lg.startX, lg.proportional));
                         e.setAttribute("x2", util.Utils.proportionalize(lg.endX, lg.proportional));
                         e.setAttribute("y1", util.Utils.proportionalize(lg.startY, lg.proportional));

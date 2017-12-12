@@ -74,9 +74,8 @@ namespace svgscene.shape {
             if (fill instanceof scene.paint.Color) {
 
             } else if (fill instanceof scene.paint.LinearGradient) {
-                var lg     = fill as scene.paint.LinearGradient;
-                var e      = NSVGNode.createLinearGradientElement();
-                var suffix = lg.proportional ? "%" : "";
+                var lg = fill as scene.paint.LinearGradient;
+                var e  = NSVGNode.createLinearGradientElement();
                 e.setAttribute("x1", util.Utils.proportionalize(lg.startX, lg.proportional));
                 e.setAttribute("x2", util.Utils.proportionalize(lg.endX, lg.proportional));
                 e.setAttribute("y1", util.Utils.proportionalize(lg.startY, lg.proportional));
