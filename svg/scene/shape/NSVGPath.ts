@@ -89,6 +89,14 @@ namespace svgscene.shape {
             return true;
         }
 
+        prefHeight(width: number) {
+            return this.pathNode.getBBox().height;
+        }
+
+        prefWidth(height: number) {
+            return this.pathNode.getBBox().width;
+        }
+
         getDom(): SVGGElement {
             return this.pathNode;
         }
@@ -99,15 +107,15 @@ namespace svgscene.shape {
             while( this.pathNode.firstChild ) {
                 this.pathNode.removeChild(this.pathNode.firstChild);
             }
-            /*
+
             if( this.path.width ) {
-                this.pathNode.setAttribute("width",this.text.width+"");
+                this.pathNode.setAttribute("width",this.path.width+"");
             }
 
             if( this.path.height ) {
-                this.pathNode.setAttribute("height",this.text.height+"");
+                this.pathNode.setAttribute("height",this.path.height+"");
             }
-            */
+
         }
     }
 }

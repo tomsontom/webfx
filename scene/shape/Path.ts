@@ -3,11 +3,18 @@ namespace scene.shape {
         NON_ZERO, EVEN_ODD
     }
 
-    export class Path extends Shape {
+    export interface NGPath extends scene.shape.NGShape {
+        prefWidth(height: number) : number;
+        prefHeight(width: number) : number;
+    }
 
+    export class Path extends Shape implements NGPath {
         ng       : svgscene.shape.NSVGPath;
         elements : PathElement[];
         fillRule : FillRule;
+        width    : number;
+        height   : number;
+
 
         constructor();
         constructor(elements : PathElement[]);
@@ -29,29 +36,6 @@ namespace scene.shape {
         add(element : PathElement) {
             this.elements.push(element);
             element.addTo(this.ng);
-            /*
-            switch(element.type) {
-                case ElementType.MOVE_TO:
-                    element.addTo(this.ng);
-                    break;
-                case ElementType.LINE_TO:
-                    break;
-                case ElementType.H_LINE_TO:
-                    break;
-                case ElementType.V_LINE_TO:
-                    break;
-                case ElementType.QUAD_TO:
-                    break;
-                case ElementType.CUBIC_TO:
-                    break;
-                case ElementType.ARC_TO:
-                    break;
-                case ElementType.MOVE_TO:
-                    break;
-                case ElementType.CLOSE:
-                    break;
-            }
-            */
             this.ng.sync();
         }
 
@@ -78,6 +62,24 @@ namespace scene.shape {
                 }
             }
             return true;
+        }
+
+        resize(width: number, height: number) {
+            this.width  = width;
+            this.height = height;
+            this.ng.sync();
+        }
+
+        prefHeight(width: number) : number {
+            return this.ng.prefHeight(width);
+        }
+
+        prefWidth(height: number) : number {
+            return this.ng.prefWidth(height);
+        }
+
+        sync() {
+            this.ng.sync();
         }
 
         getNgNode(): scene.NGNode {

@@ -7,16 +7,15 @@
 function run() {
 
 
+    /*
     var color = scene.paint.Color.AQUAMARINE;
     console.log(color.toRGBAString());
     console.log(color.toString());
     console.log(color.red + ", " + color.green + ", " + color.blue);
-
     console.log(util.Utils.RGBtoHSB(color.red, color.green, color.blue));
-
     console.log(color.deriveColor(0, 1.0, 0.7, 1.0));
-
     console.log(color.darker());
+    */
 
     var svg = document.getElementById("sample");
     var button = new scene.control.Button("Hello SVG!");
@@ -44,6 +43,7 @@ function run() {
     path.add(new scene.shape.LineTo(100, 100));
     path.add(new scene.shape.LineTo(10, 200));
     path.add(new scene.shape.ClosePath());
+    path.resize(400, 400);
 
     var svgPath = document.getElementById("path");
     svgPath.appendChild((path.getNgNode() as svgscene.shape.NSVGPath).getDom());
