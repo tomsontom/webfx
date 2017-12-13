@@ -17,6 +17,8 @@ export class NSVGCanvas extends NSVGNode {
         this.canvasNode.height = width == null ? 0 : height;
 
         this.dom = NSVGNode.createForeignObjectElement();
+        this.dom.setAttribute('width', String(this.canvasNode.width));
+        this.dom.setAttribute('height', String(this.canvasNode.height));
         this.dom.appendChild(this.canvasNode);
     }
 
@@ -38,10 +40,12 @@ export class NSVGCanvas extends NSVGNode {
 
         if( this.canvas.getWidth() ) {
             this.canvasNode.width = this.canvas.getWidth();
+            this.dom.setAttribute('width', String(this.canvasNode.width));
         }
 
         if( this.canvas.getHeight() ) {
             this.canvasNode.height = this.canvas.getHeight();
+            this.dom.setAttribute('height', String(this.canvasNode.height));
         }
     }
 }

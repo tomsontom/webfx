@@ -2,8 +2,8 @@ import {NGNode, Node} from "./../Node";
 import {NSVGCanvas} from "./../../svg/scene/canvas/NSVGCanvas";
 
 export class Canvas extends Node {
-    ng: NSVGCanvas;
-    width: number;
+    ng    : NSVGCanvas;
+    width : number;
     height: number;
 
 
