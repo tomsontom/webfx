@@ -92,6 +92,7 @@ export class Path extends Shape implements NGPath {
     }
 
     setFill(fill: Paint) {
+        console.log("Path: setFill() " + fill);
         this.fill = fill;
         this.ng.setFill(fill);
     }

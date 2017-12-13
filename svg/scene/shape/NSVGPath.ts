@@ -234,8 +234,9 @@ export class NSVGPath extends NSVGNode {
     }
 
     sync() {
-        this.pathNode.setAttribute("x", this.pathNode.getBBox().x * -1 + "");
-        this.pathNode.setAttribute("y", this.pathNode.getBBox().y * -1 + "");
+        //this.dom.setAttribute("x", String(this.pathNode.getBBox().x * -1));
+        //this.dom.setAttribute("y", String(this.pathNode.getBBox().y * -1));
+
         while (this.pathNode.firstChild) {
             this.pathNode.removeChild(this.pathNode.firstChild);
         }
