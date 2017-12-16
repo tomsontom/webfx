@@ -1,51 +1,116 @@
-namespace scene.shape {
+import {NGShape, Shape} from "./Shape";
+import {NSVGPath} from "../../svg/scene/shape/NSVGPath";
+import {Paint} from "../paint/Paint";
+import {NGNode} from "../Node";
+import {MoveTo, PathElement} from "./PathElement";
 
-    export class Path extends scene.shape.Shape{
-        private path2d : geom.Path2D = null;
+export enum FillRule {
+    NON_ZERO, EVEN_ODD
+}
 
-        elements    : scene.shape.PathElement[] = [];
-        fillRule    : scene.shape.FillRule;
-        isPathValid : boolean;
+export interface NGPath extends NGShape {
+    prefWidth(height: number): number;
 
-        constructor() {
-            super();
+    prefHeight(width: number): number;
+}
 
+export class Path extends Shape implements NGPath {
+    static count   : number = 0;
+           id      : string;
+           ng      : NSVGPath;
+           elements: PathElement[];
+           fillRule: FillRule;
+           width   : number;
+           height  : number;
+
+
+    constructor();
+    constructor(elements: PathElement[]);
+    constructor(elements?: PathElement[]) {
+        super();
+        this.ng = new NSVGPath(this);
+        if (elements === undefined) {
+            this.elements = [];
+        } else {
+            this.elements = elements;
         }
+        this.id = "Path_" + (Path.count++);
+    }
 
 
-        getFillRule() : scene.shape.FillRule {
-            return this.fillRule == null ? FillRule.NON_ZERO : this.fillRule;
-        }
-        setFillRule(value : scene.shape.FillRule) : void {
-            if (this.fillRule != null || value != FillRule.NON_ZERO) {
-                this.fillRule = value;
-            }
-        }
+    markPathDirty() {
 
-        impl_configShape() : geom.Path2D {
-            if (this.isPathValid) {
-                if (this.path2d == null) {
-                    this.path2d = PathUtils.configShape(this.elements, this.fillRule == FillRule.EVEN_ODD);
-                } else {
-                    this.path2d.windingRule = this.fillRule == FillRule.NON_ZERO ? geom.Path2D.WIND_NON_ZERO : geom.Path2D.WIND_EVEN_ODD;
-                }
-                return this.path2d;
+    }
+
+    add(element: PathElement) {
+        this.elements.push(element);
+        element.addTo(this.ng);
+        this.ng.sync();
+    }
+
+    addAll(elements: PathElement[]) {
+        this.elements.concat(elements);
+        this.elements.forEach((element: PathElement, i: number) => {
+            element.addTo(this.ng);
+        });
+        this.ng.sync();
+    }
+
+    private isFirstPathElementValid(): boolean {
+        let _elements = this.elements;
+        if (_elements != null && _elements.length > 0) {
+            let firstElement = _elements[0];
+            if (!firstElement.isAbsolute()) {
+                console.log("First element of the path can not be relative. Path: %s\n", this);
+                return false;
+            } else if (firstElement instanceof MoveTo) {
+                return true;
             } else {
-                return new geom.Path2D();
+                console.log("Missing initial moveto in path definition. Path: %s\n", this);
+                return false;
             }
         }
+        return true;
+    }
 
-        markPathDirty() : void {
-            this.path2d = null;
-            //impl_markDirty(DirtyBits.NODE_CONTENTS);
-            //impl_geomChanged();
-        }
+    resize(width: number, height: number) {
+        this.width  = width;
+        this.height = height;
+        this.ng.sync();
+    }
 
+    prefHeight(width: number): number {
+        return this.ng.prefHeight(width);
+    }
 
-        getNgNode(): scene.NGNode {
-            //return new NGPath;
-            return null;
-        }
+    prefWidth(height: number): number {
+        return this.ng.prefWidth(height);
+    }
 
+    getFill() {
+        return this.ng.getFill();
+    }
+
+    setFill(fill: Paint) {
+        console.log("Path: setFill() " + fill);
+        this.fill = fill;
+        this.ng.setFill(fill);
+    }
+
+    getStroke() {
+        return this.ng.getStroke();
+    }
+
+    setStroke(stroke: Paint) {
+        this.stroke = stroke;
+        this.ng.setStroke(stroke);
+    }
+
+    sync() {
+        this.ng.sync();
+    }
+
+    getNgNode(): NGNode {
+        return this.ng;
     }
 }

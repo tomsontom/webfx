@@ -1,4 +1,6 @@
-namespace util {
+import {Color} from "./../scene/paint/Color";
+import {Stop} from "./../scene/paint/Stop";
+
     export class Utils {
 
         static clamp(min : number, value : number, max : number) : number {
@@ -31,27 +33,25 @@ namespace util {
             return src.indexOf(search) > -1;
         }
 
-        static calculateBrightness(color : scene.paint.Color) : number {
+    static calculateBrightness(color: Color): number {
             return (0.3 * color.red) + (0.59 * color.green) + (0.11 * color.blue);
         }
 
-        static interpolateLinear(position : number, color1 : scene.paint.Color, color2 : scene.paint.Color) : scene.paint.Color {
-            var c1Linear : scene.paint.Color = Utils.convertSRGBtoLinearRGB(color1);
-            var c2Linear : scene.paint.Color = Utils.convertSRGBtoLinearRGB(color2);
-            return Utils.convertLinearRGBtoSRGB(scene.paint.Color.color(
-                c1Linear.red     + (c2Linear.red     - c1Linear.red)     * position,
-                c1Linear.green   + (c2Linear.green   - c1Linear.green)   * position,
-                c1Linear.blue    + (c2Linear.blue    - c1Linear.blue)    * position,
-                c1Linear.opacity + (c2Linear.opacity - c1Linear.opacity) * position
-            ));
+    static interpolateLinear(position: number, color1: Color, color2: Color): Color {
+        var c1Linear: Color = Utils.convertSRGBtoLinearRGB(color1);
+        var c2Linear: Color = Utils.convertSRGBtoLinearRGB(color2);
+        return Utils.convertLinearRGBtoSRGB(Color.color(c1Linear.red + (c2Linear.red - c1Linear.red) *
+                                                        position, c1Linear.green + (c2Linear.green - c1Linear.green) *
+                                                        position, c1Linear.blue + (c2Linear.blue - c1Linear.blue) *
+                                                        position, c1Linear.opacity + (c2Linear.opacity - c1Linear.opacity) * position));
         }
 
-        static ladder(param : any, stops : scene.paint.Stop[]) : scene.paint.Color {
+    static ladder(param: any, stops: Stop[]): Color {
             var position : number;
             if (param) {
                 if (typeof param === "number") {
                     position = param;
-                } else if (param instanceof scene.paint.Color) {
+            } else if (param instanceof Color) {
                     position = Utils.calculateBrightness(param);
                 } else {
                     throw new SyntaxError("param must be either of type number or scene.paint.Color");
@@ -166,7 +166,7 @@ namespace util {
             return hsbvals;
         }
 
-        static convertSRGBtoLinearRGB(color : scene.paint.Color) : scene.paint.Color {
+    static convertSRGBtoLinearRGB(color: Color): Color {
             var colors : number[] = [ color.red, color.green, color.blue ];
             for (let i : number = 0 ; i < colors.length  ; i++) {
                 if (colors[i] <= 0.04045) {
@@ -175,10 +175,10 @@ namespace util {
                     colors[i] = Math.pow((colors[i] + 0.055) / 1.055, 2.4);
                 }
             }
-            return scene.paint.Color.color(colors[0], colors[1], colors[2]);
+        return Color.color(colors[0], colors[1], colors[2]);
         }
 
-        static convertLinearRGBtoSRGB(color : scene.paint.Color) : scene.paint.Color {
+    static convertLinearRGBtoSRGB(color: Color): Color {
             var colors : number[] = [ color.red, color.green, color.blue ];
             for (let i : number = 0 ; i < colors.length ; i++) {
                 if (colors[i] <= 0.0031308) {
@@ -187,7 +187,7 @@ namespace util {
                     colors[i] = (1.055 * Math.pow(colors[i], (1.0 / 2.4))) - 0.055;
                 }
             }
-            return scene.paint.Color.color(colors[0], colors[1], colors[2], color.opacity);
+        return Color.color(colors[0], colors[1], colors[2], color.opacity);
         }
 
         static sum(values : number[]) : number {
@@ -205,5 +205,11 @@ namespace util {
         static toDegrees(rads : number) : number{
             return (rads * 180) / Math.PI;
         }
+
+    static proportionalize(v: number, proportional: boolean) {
+        if (proportional) {
+            return v * 100 + "%";
+        }
+        return v + "";
     }
 }

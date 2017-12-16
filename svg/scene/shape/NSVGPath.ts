@@ -1,30 +1,91 @@
-import {NSVGNode} from "./../../../svg/scene/NSVGNode";
-import {NGText, Text} from "./../../../scene/text/Text";
+import {NSVGNode} from "./../NSVGNode";
 import {Paint} from "../../../scene/paint/Paint";
 import {Color} from "../../../scene/paint/Color";
 import {LinearGradient} from "../../../scene/paint/LinearGradient";
 import {Utils} from "../../../util/Utils";
 import {RadialGradient} from "../../../scene/paint/RadialGradient";
-
-export class NSVGText extends NSVGNode implements NGText {
-    text: Text;
-    dom: SVGGElement;
-    textNode: SVGTextElement;
-    private fill: Paint;
-    private stroke: Paint;
+import {Shape} from "../../../scene/shape/Shape";
+import {FillRule, Path} from "../../../scene/shape/Path";
 
 
-    constructor(text: Text) {
+export class NSVGPath extends NSVGNode {
+    currentX       : number;
+    currentY       : number;
+    path           : Path;
+    dom            : SVGGElement;
+    defs           : SVGDefsElement;
+    pathNode       : SVGPathElement;
+    private fill   : Paint;
+    private stroke : Paint;
+
+
+    constructor(path: Path) {
         super();
-        this.text     = text;
-        this.dom      = NSVGNode.createGElement();
-        this.textNode = NSVGNode.createTextElement();
-        this.textNode.setAttribute("font-family", "Roboto");
-        this.textNode.setAttribute("font-size", "15px");
-        this.textNode.setAttribute("x", "0");
-        this.dom.appendChild(this.textNode);
+        this.currentX = 0;
+        this.currentY = 0;
+        this.fill     = Color.BLACK;
+        this.stroke   = Color.BLACK;
+        this.path     = path;
+
+        this.dom = NSVGNode.createGElement();
+
+        this.defs = NSVGNode.createDefsElement();
+        this.defs.setAttribute("id", "defs_" + this.path.id);
+
+        this.pathNode = NSVGNode.createPathElement();
+        this.pathNode.setAttribute("d", "");
+
+        this.dom.appendChild(this.defs);
+        this.dom.appendChild(this.pathNode);
     }
 
+
+    addMoveTo(x: number, y: number): void {
+        let d = this.pathNode.getAttribute("d");
+        d += "M " + x + " " + y + " ";
+        this.pathNode.setAttribute("d", d);
+        this.currentX = x;
+        this.currentY = y;
+    }
+
+    addLineTo(x: number, y: number): void {
+        let d = this.pathNode.getAttribute("d");
+        d += "L " + x + " " + y + " ";
+        this.pathNode.setAttribute("d", d);
+        this.currentX = x;
+        this.currentY = y;
+    }
+
+    addQuadTo(ctrlX: number, ctrlY: number, x: number, y: number): void {
+        let d = this.pathNode.getAttribute("d");
+        d += "Q " + ctrlX + " " + ctrlY + " " + x + " " + y + " ";
+        this.pathNode.setAttribute("d", d);
+        this.currentX = x;
+        this.currentY = y;
+    }
+
+    addCubicTo(ctrlX1: number, ctrlY1: number, ctrlX2: number, ctrlY2: number, x: number, y: number): void {
+        let d = this.pathNode.getAttribute("d");
+        d += "C " + ctrlX1 + " " + ctrlY1 + " " + ctrlX2 + " " + ctrlY2 + " " + x + " " + y + " ";
+        this.pathNode.setAttribute("d", d);
+        this.currentX = x;
+        this.currentY = y;
+    }
+
+    addArcTo(radiusX: number, radiusY: number, xAxisRotate: number, largeArcFlag: boolean, sweepFlag: boolean, x: number, y: number): void {
+        let d = this.pathNode.getAttribute("d");
+        d += "A " + radiusX + " " + radiusY + " " + xAxisRotate + " " + (largeArcFlag ? "1" : "0") + " " +
+             (sweepFlag ? "1" : "0") + " " + x + " " + y + " ";
+        this.pathNode.setAttribute("d", d);
+        this.currentX = x;
+        this.currentY = y;
+    }
+
+    addClosePath() {
+        let d = this.pathNode.getAttribute("d");
+        d += "Z ";
+        this.pathNode.setAttribute("d", d);
+    }
 
     getFill(): Paint {
         return this.fill;
@@ -34,7 +95,7 @@ export class NSVGText extends NSVGNode implements NGText {
         this.fill = fill;
         if (fill instanceof Color) {
             var c = fill as Color;
-            this.textNode.setAttribute("fill", c.toRGBAString());
+            this.pathNode.setAttribute("fill", c.toRGBAString());
             //this.pathNode.setAttribute("fill-opacity", String(c.opacity));
         } else if (fill instanceof LinearGradient) {
             var lg    = fill as LinearGradient;
@@ -54,7 +115,8 @@ export class NSVGText extends NSVGNode implements NGText {
                 .forEach((stop) => {
                     svgLg.appendChild(stop);
                 });
-            this.textNode.setAttribute("fill", "url(#" + lg.id + ")");
+            this.defs.appendChild(svgLg);
+            this.pathNode.setAttribute("fill", "url(#" + lg.id + ")");
         } else if (fill instanceof RadialGradient) {
             var rg    = fill as RadialGradient;
             var fx    = rg.focusDistance * Math.cos(rg.focusAngle) + rg.centerX;
@@ -75,7 +137,8 @@ export class NSVGText extends NSVGNode implements NGText {
                 .forEach((stop) => {
                     svgRg.appendChild(stop);
                 });
-            this.textNode.setAttribute("fill", "url(#" + rg.id + ")");
+            this.defs.appendChild(svgRg);
+            this.pathNode.setAttribute("fill", "url(#" + rg.id + ")");
         }
     }
 
@@ -87,8 +150,8 @@ export class NSVGText extends NSVGNode implements NGText {
         this.stroke = stroke;
         if (stroke instanceof Color) {
             var c = stroke as Color;
-            this.textNode.setAttribute("stroke", c.toRGBAString());
-            //this.textNode.setAttribute("stroke-opacity", String(c.opacity));
+            this.pathNode.setAttribute("stroke", c.toRGBAString());
+            //this.pathNode.setAttribute("stroke-opacity", String(c.opacity));
         } else if (stroke instanceof LinearGradient) {
             var lg    = stroke as LinearGradient;
             var svgLg = NSVGNode.createLinearGradientElement();
@@ -107,7 +170,8 @@ export class NSVGText extends NSVGNode implements NGText {
                 .forEach((stop) => {
                     svgLg.appendChild(stop);
                 });
-            this.textNode.setAttribute("stroke", "url(#" + lg.id + ")");
+            this.defs.appendChild(svgLg);
+            this.pathNode.setAttribute("stroke", "url(#" + lg.id + ")");
         } else if (stroke instanceof RadialGradient) {
             var rg    = stroke as RadialGradient;
             var fx    = rg.focusDistance * Math.cos(rg.focusAngle) + rg.centerX;
@@ -128,42 +192,62 @@ export class NSVGText extends NSVGNode implements NGText {
                 .forEach((stop) => {
                     svgRg.appendChild(stop);
                 });
-            this.textNode.setAttribute("stroke", "url(#" + rg.id + ")");
+            this.defs.appendChild(svgRg);
+            this.pathNode.setAttribute("stroke", "url(#" + rg.id + ")");
         }
     }
 
+    reset(): void {
+        this.pathNode.setAttribute("d", "");
+    }
+
+    update(): void {
+        this.sync()
+    }
+
+    setFillRule(fillRule: FillRule): void {
+        this.pathNode.setAttribute("fill-rule", fillRule == FillRule.EVEN_ODD ? "evenodd" : "nonzero");
+    }
+
+    getGeometry(): Path {
+        return this.path;
+    }
+
+    getShape(): Shape {
+        return null//this.path;
+    }
+
+    acceptsPath2dOnUpdate(): boolean {
+        return true;
+    }
+
     prefHeight(width: number) {
-        return this.textNode.getBBox().height;
+        return this.pathNode.getBBox().height;
     }
 
     prefWidth(height: number) {
-        return this.textNode.getBBox().width;
+        return this.pathNode.getBBox().width;
     }
 
-    getDom() {
+    getDom(): SVGGElement {
         return this.dom;
     }
 
     sync() {
-        this.textNode.setAttribute("x", this.textNode.getBBox().x * -1 + "");
-        this.textNode.setAttribute("y", this.textNode.getBBox().y * -1 + "");
-        while (this.textNode.firstChild) {
-            this.textNode.removeChild(this.textNode.firstChild);
+        //this.dom.setAttribute("x", String(this.pathNode.getBBox().x * -1));
+        //this.dom.setAttribute("y", String(this.pathNode.getBBox().y * -1));
+
+        while (this.pathNode.firstChild) {
+            this.pathNode.removeChild(this.pathNode.firstChild);
         }
 
-        if (this.text.text) {
-            var t = document.createTextNode(this.text.text);
-            this.textNode.appendChild(t);
-        } else {
-
+        if (this.path.width) {
+            this.pathNode.setAttribute("width", this.path.width + "");
         }
 
-        if (this.text.width) {
-            this.textNode.setAttribute("width", this.text.width + "");
+        if (this.path.height) {
+            this.pathNode.setAttribute("height", this.path.height + "");
         }
 
-        if (this.text.height) {
-            this.textNode.setAttribute("height", this.text.height + "");
-        }
     }
 }
