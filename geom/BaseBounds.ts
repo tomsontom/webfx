@@ -1,77 +1,79 @@
-namespace geom {
-    export enum BoundsType {
-        RECTANGLE, BOX
-    }
-    
-    export abstract class BaseBounds {
-        
-        constructor() { }
+import Point2D = geom.Point2D;
+import Rectangle = geom.Rectangle;
+import RectBounds = geom.RectBounds;
+
+export enum BoundsType {
+    RECTANGLE, BOX
+}
+
+export abstract class BaseBounds {
+
+    constructor() { }
 
 
-        abstract copy() : geom.BaseBounds;
+    abstract copy() : BaseBounds;
 
-        abstract is2D() : boolean;
+    abstract is2D() : boolean;
 
-        abstract getBoundsType() : geom.BoundsType;
-        
-        abstract getWidth() : number;
-        
-        abstract getHeight() : number;
+    abstract getBoundsType() : BoundsType;
 
-        abstract getMinX() : number;
+    abstract getWidth() : number;
 
-        abstract getMinY() : number;
+    abstract getHeight() : number;
 
-        abstract getMaxX() : number;
+    abstract getMinX() : number;
 
-        abstract getMaxY() : number;
+    abstract getMinY() : number;
 
-        abstract translate(x : number, y: number) : void;
+    abstract getMaxX() : number;
 
-        abstract getMin(min : geom.Point2D);
+    abstract getMaxY() : number;
 
-        abstract getMax(max : geom.Point2D);
-        
-        abstract deriveWithUnion(other : BaseBounds) : geom.BaseBounds;
-        
-        abstract deriveWithNewBounds(other : Rectangle) : geom.BaseBounds;
-        abstract deriveWithNewBounds(other : BaseBounds) : geom.BaseBounds;
+    abstract translate(x : number, y: number) : void;
 
-        abstract deriveWithNewBounds(minX : number, minY : number, maxX : number, maxY : number) : geom.BaseBounds;
+    abstract getMin(min : Point2D);
 
-        abstract deriveWithPadding(h : number, v : number, d : number) : geom.BaseBounds;
+    abstract getMax(max : Point2D);
 
-        abstract intersectWith(other : geom.Rectangle) : void;
-        abstract intersectWith(other : geom.BaseBounds) : void;
+    abstract deriveWithUnion(other : BaseBounds) : BaseBounds;
 
-        abstract intersectWith(minX : number, minY : number, maxX : number, maxY : number) : void;
-        
-        abstract setBoundsAndSort(p1 : geom.Point2D, p2 : geom.Point2D) : void;
-        abstract setBoundsAndSort(minX, minY,  minZ, maxX, maxY, maxZ) : void;
-        
-        abstract add(p : geom.Point2D) : void;
-        abstract add(x : number, y : number) : void;
+    abstract deriveWithNewBounds(other : Rectangle) : BaseBounds;
+    abstract deriveWithNewBounds(other : BaseBounds) : BaseBounds;
 
-        abstract contains(p : geom.Point2D) : boolean;
+    abstract deriveWithNewBounds(minX : number, minY : number, maxX : number, maxY : number) : BaseBounds;
 
-        abstract contains(x : number, y : number) : boolean;
+    abstract deriveWithPadding(h : number, v : number, d : number) : BaseBounds;
 
-        abstract intersects(x : number, y : number, width : number, height : number) : boolean;
+    abstract intersectWith(other : Rectangle) : void;
+    abstract intersectWith(other : BaseBounds) : void;
 
-        abstract isEmpty() : boolean;
+    abstract intersectWith(minX : number, minY : number, maxX : number, maxY : number) : void;
 
-        abstract roundOut() : void;
-        
-        abstract flattenInto(bounds : geom.RectBounds) : geom.RectBounds;
+    abstract setBoundsAndSort(p1 : Point2D, p2 : geom.Point2D) : void;
+    abstract setBoundsAndSort(minX, minY,  minZ, maxX, maxY, maxZ) : void;
 
-        abstract makeEmpty() : geom.BaseBounds;
+    abstract add(p : Point2D) : void;
+    abstract add(x : number, y : number) : void;
 
-        abstract disjoint(x : number, y : number, width : number, height : number) : boolean;
+    abstract contains(p : Point2D) : boolean;
 
-        protected abstract sortMinMax() : void;
+    abstract contains(x : number, y : number) : boolean;
 
-        static getInstance(minX : number, minY : number, maxX : number, maxY : number) : geom.BaseBounds{
-            return new geom.RectBounds(minX, minY, maxX, maxY);
-        }
+    abstract intersects(x : number, y : number, width : number, height : number) : boolean;
+
+    abstract isEmpty() : boolean;
+
+    abstract roundOut() : void;
+
+    abstract flattenInto(bounds : RectBounds) : RectBounds;
+
+    abstract makeEmpty() : BaseBounds;
+
+    abstract disjoint(x : number, y : number, width : number, height : number) : boolean;
+
+    protected abstract sortMinMax() : void;
+
+    static getInstance(minX : number, minY : number, maxX : number, maxY : number) : BaseBounds{
+        return new RectBounds(minX, minY, maxX, maxY);
     }
 }
