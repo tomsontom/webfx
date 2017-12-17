@@ -1,7 +1,7 @@
-import { TNode } from "./Base";
+import { TShape } from "./BasicShapes";
 
 
-export class TRoundedRect extends TNode {
+export class TRoundedRect extends TShape {
     private _x      : number = 0;
     private _y      : number = 0;
     private _width  : number = 0;
@@ -18,9 +18,6 @@ export class TRoundedRect extends TNode {
 
     constructor() {
         super("path");
-        this.set("stroke","red");
-        this.set("fill","transparent");
-        this.set("stroke-width","5");
     }
 
     get x() : number {
