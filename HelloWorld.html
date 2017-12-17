@@ -7,11 +7,20 @@
         <script src="build/runnable.js"></script>
     </head>
     <body>
+            <p>
+                Sample <select id="samples" size="1"></select> <button onclick="location.reload(true)">Reload</button>
+            </p>
+            <p>
+                    <svg width="800" height="800" id="sample" xmlns="http://www.w3.org/2000/svg"/>
+            </p>
+            
+        <!--
+                
         <svg id="sample" xmlns="http://www.w3.org/2000/svg"></svg>
 
         <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
 
-        <svg id="path" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"></svg>
+        <svg id="path" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"></svg>-->
 
         <script>
             requirejs( ["HelloWorld"], function( HelloWorld ) {

@@ -10,8 +10,25 @@ import { NSVGCanvas } from "./svg/scene/canvas/NSVGCanvas";
 import { NSVGPath } from "./svg/scene/shape/NSVGPath";
 import {ClosePath, LineTo, MoveTo} from "./scene/shape/PathElement";
 import {Path} from "./scene/shape/Path";
+import { TRoundedRect } from "./tsvg/Extensions";
+import { ElementUtils } from "./tsvg/Utils";
 
 export class App {
+    samples : Sample[] = [];
+
+    constructor() {
+        this.samples.push( new ButtonSample() );
+        this.samples.push( new CanvasSample() );
+        this.samples.push( new PathSample() );
+        this.samples.push( new RoundRectSample() );
+    }
+
+    loadSample(field : HTMLSelectElement) {
+        var svg = ElementUtils.clear(document.getElementById("sample"));
+        this.samples[field.selectedIndex].render(svg);
+        location.hash = String(field.selectedIndex);
+    }
+
     start() {
         var color = Color.AQUAMARINE;
         console.log(color.toRGBAString());
@@ -24,16 +41,55 @@ export class App {
 
         console.log(color.darker());
 
-        var svg    = document.getElementById("sample");
+        var field = document.getElementById("samples") as HTMLSelectElement;
+        field.addEventListener("change", evt => this.loadSample(field) );
+        
+        var html = this.samples.map( e => {
+            return "<option>" + e.label + "</option>";
+        }).join("");
+
+        field.innerHTML = html;
+
+        console.log("Hash: ", location.hash);
+        if( location.hash ) {
+            field.selectedIndex = Number(location.hash.substr(1));
+        }
+        this.loadSample(field);
+    }
+}
+
+abstract class Sample {
+    readonly label : string;
+    constructor(label : string) {
+        this.label = label;
+    }
+
+    abstract render(svg: Element);
+}
+
+class ButtonSample extends Sample {
+    constructor() {
+        super("JavaFX - Button");
+    }
+
+    render(svg: Element) {
         var button = new Button("Hello SVG!");
         svg.appendChild((button.getNgNode() as NSVGRegion).getDom());
         button.resize(200, 30);
         button.layoutChildren();
         console.log(svg);
 
+    }
+}
+
+class CanvasSample extends Sample {
+    constructor() {
+        super("JavaFX - Canvas");
+    }
+
+    render(svg: Element) {
         var canvas = new Canvas(200, 200);
-        var svg1   = document.getElementById("svg");
-        svg1.appendChild((canvas.getNgNode() as NSVGCanvas).getDom());
+        svg.appendChild((canvas.getNgNode() as NSVGCanvas).getDom());
 
         canvas.resize(400, 400);
         var ctx = canvas.getGraphicsContext2D();
@@ -44,7 +100,15 @@ export class App {
         ctx.strokeStyle = 'black';
         ctx.font        = '48px sans-serf';
         ctx.strokeText('WebFX is fun', 125, 75);
+    }
+}
 
+class PathSample extends Sample {
+    constructor() {
+        super("JavaFX - Path");
+    }
+
+    render(svg: Element) {
         var path = new Path();
         path.add(new MoveTo(10, 10));
         path.add(new LineTo(50, 50));
@@ -60,10 +124,41 @@ export class App {
         path.setFill(fillGradient);
         path.setStroke(strokeGradient);
 
-
-        var svgPath = document.getElementById("path");
-        svgPath.appendChild((path.getNgNode() as NSVGPath).getDom());
+        svg.appendChild((path.getNgNode() as NSVGPath).getDom());
 
         console.log(path.elements);
+    }
+}
+
+class RoundRectSample extends Sample {
+    constructor() {
+        super("TSVG - Rounded Rectangle");
+    }
+
+    render(svg: Element) {
+        var rect = new TRoundedRect();
+        rect.x = 10;
+        rect.y = 10;
+        rect.width = 200;
+        rect.height = 200;
+
+        // upper left
+        rect.topLeftHorizontalRadius = 20;
+        rect.topLeftVerticalRadius = 20;
+        
+        // upper right
+        rect.topRightHorizontalRadius = 20;
+        rect.topRightVerticalRadius = 20;
+
+        // lower right
+        rect.bottomRightVerticalRadius = 20;
+        rect.bottomRightHorizontalRadius = 20;
+
+        // lower left
+        rect.bottomLeftHorizontalRadius = 20;
+        rect.bottomLeftVerticalRadius = 20;
+
+        rect.pack();
+        svg.appendChild(rect.domNode);
     }
 }
