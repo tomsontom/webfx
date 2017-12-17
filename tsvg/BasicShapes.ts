@@ -251,7 +251,7 @@ export class TShape extends TNode {
     }
 }
 
-export class TSVGRect extends TShape {
+export class TRect extends TShape {
     constructor() {
         super("rect");
     }
