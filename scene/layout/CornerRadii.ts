@@ -1,4 +1,6 @@
 export class CornerRadii {
+    public static readonly EMPTY : CornerRadii = new CornerRadii(0, 0, 0, 0, 0, 0, 0, 0, false, false, false, false, false, false, false, false);
+
     topLeftHorizontalRadius     : number;
     topLeftVerticalRadius       : number;
     topRightVerticalRadius      : number;
@@ -18,23 +20,33 @@ export class CornerRadii {
     bottomLeftHorizontalRadiusAsPercentage  : boolean;
 
 
-    constructor(radius: number) {
-        this.topLeftHorizontalRadius     = radius;
-        this.topLeftVerticalRadius       = radius;
-        this.topRightVerticalRadius      = radius;
-        this.topRightHorizontalRadius    = radius;
-        this.bottomRightHorizontalRadius = radius;
-        this.bottomRightVerticalRadius   = radius;
-        this.bottomLeftVerticalRadius    = radius;
-        this.bottomLeftHorizontalRadius  = radius;
+    constructor(radius: number);
+    constructor(topLeftHorizontalRadius : number, topLeftVerticalRadius : number, topRightVerticalRadius : number, topRightHorizontalRadius : number,
+                bottomRightHorizontalRadius : number, bottomRightVerticalRadius : number, bottomLeftVerticalRadius : number, bottomLeftHorizontalRadius : number,
+                topLeftHorizontalRadiusAsPercent : boolean, topLeftVerticalRadiusAsPercent : boolean, topRightVerticalRadiusAsPercent : boolean,
+                topRightHorizontalRadiusAsPercent : boolean, bottomRightHorizontalRadiusAsPercent : boolean, bottomRightVerticalRadiusAsPercent : boolean,
+                bottomLeftVerticalRadiusAsPercent : boolean, bottomLeftHorizontalRadiusAsPercent : boolean)
+    constructor(topLeftHorizontalRadius? : number, topLeftVerticalRadius? : number, topRightVerticalRadius? : number, topRightHorizontalRadius? : number,
+                bottomRightHorizontalRadius? : number, bottomRightVerticalRadius? : number, bottomLeftVerticalRadius? : number, bottomLeftHorizontalRadius? : number,
+                topLeftHorizontalRadiusAsPercent? : boolean, topLeftVerticalRadiusAsPercent? : boolean, topRightVerticalRadiusAsPercent? : boolean,
+                topRightHorizontalRadiusAsPercent? : boolean, bottomRightHorizontalRadiusAsPercent? : boolean, bottomRightVerticalRadiusAsPercent? : boolean,
+                bottomLeftVerticalRadiusAsPercent? : boolean, bottomLeftHorizontalRadiusAsPercent? : boolean) {
+        this.topLeftHorizontalRadius     = topLeftHorizontalRadius;
+        this.topLeftVerticalRadius       = topLeftVerticalRadius;
+        this.topRightVerticalRadius      = topRightVerticalRadius;
+        this.topRightHorizontalRadius    = topRightHorizontalRadius;
+        this.bottomRightHorizontalRadius = bottomRightHorizontalRadius;
+        this.bottomRightVerticalRadius   = bottomRightVerticalRadius;
+        this.bottomLeftVerticalRadius    = bottomLeftVerticalRadius;
+        this.bottomLeftHorizontalRadius  = bottomLeftHorizontalRadius;
 
-        this.topLeftHorizontalRadiusAsPercentage     = false;
-        this.topLeftVerticalRadiusAsPercentage       = false;
-        this.topRightVerticalRadiusAsPercentage      = false;
-        this.topRightHorizontalRadiusAsPercentage    = false;
-        this.bottomRightHorizontalRadiusAsPercentage = false;
-        this.bottomRightVerticalRadiusAsPercentage   = false;
-        this.bottomLeftVerticalRadiusAsPercentage    = false;
-        this.bottomLeftHorizontalRadiusAsPercentage  = false;
+        this.topLeftHorizontalRadiusAsPercentage     = topLeftHorizontalRadiusAsPercent;
+        this.topLeftVerticalRadiusAsPercentage       = topLeftVerticalRadiusAsPercent;
+        this.topRightVerticalRadiusAsPercentage      = topRightVerticalRadiusAsPercent;
+        this.topRightHorizontalRadiusAsPercentage    = topRightHorizontalRadiusAsPercent;
+        this.bottomRightHorizontalRadiusAsPercentage = bottomRightHorizontalRadiusAsPercent;
+        this.bottomRightVerticalRadiusAsPercentage   = bottomRightVerticalRadiusAsPercent;
+        this.bottomLeftVerticalRadiusAsPercentage    = bottomLeftVerticalRadiusAsPercent;
+        this.bottomLeftHorizontalRadiusAsPercentage  = bottomLeftHorizontalRadiusAsPercent;
     }
 }

@@ -27,43 +27,43 @@ export class Button extends Region {
 
     // This needs to be replaced by CSS
     addStyling() {
-        var fills : BackgroundFill[] = [];
+        let fills : BackgroundFill[] = [];
         
         {
-            var color = Color.rgb(255,255,255, 0.7294117647058823);
-            var radii = new CornerRadii(3);
-            var insets = new Insets(0,0,-1,0);
-            var fill = new BackgroundFill(color,radii,insets);
+            let color = Color.rgb(255,255,255, 0.7294117647058823);
+            let radii = new CornerRadii(3);
+            let insets = new Insets(0,0,-1,0);
+            let fill = new BackgroundFill(color,radii,insets);
             fills.push(fill);
         }
         
         {
-            var color = Color.rgb(182,182,182);
-            var radii = new CornerRadii(3);
-            var insets = new Insets(0,0,0,0);
-            var fill = new BackgroundFill(color,radii,insets);
+            let color = Color.rgb(182,182,182);
+            let radii = new CornerRadii(3);
+            let insets = new Insets(0,0,0,0);
+            let fill = new BackgroundFill(color,radii,insets);
             fills.push(fill);
         }
     
         {
-            var stops : Stop[] = [];
+            let stops : Stop[] = [];
             stops.push(new Stop(0,Color.rgb(253,253,253)));
             stops.push(new Stop(1,Color.rgb(226,226,226)));
-            var gradient = new LinearGradient(0,0,0,1,true,CycleMethod.NO_CYCLE,stops);
-            var radii = new CornerRadii(2);
-            var insets = new Insets(1,1,1,1);
-            var fill = new BackgroundFill(gradient,radii,insets);
+            let gradient = new LinearGradient(0,0,0,1,true,CycleMethod.NO_CYCLE,stops);
+            let radii = new CornerRadii(2);
+            let insets = new Insets(1,1,1,1);
+            let fill = new BackgroundFill(gradient,radii,insets);
             fills.push(fill);
         }
     
         {
-            var stops : Stop[] = [];
+            let stops : Stop[] = [];
             stops.push(new Stop(0,Color.rgb(239,239,239)));
             stops.push(new Stop(1,Color.rgb(217,217,217)));
-            var gradient = new LinearGradient(0,0,0,1,true,CycleMethod.NO_CYCLE,stops);
-            var radii = new CornerRadii(1);
-            var insets = new Insets(2,2,2,2);
-            var fill = new BackgroundFill(gradient,radii,insets);
+            let gradient = new LinearGradient(0,0,0,1,true,CycleMethod.NO_CYCLE,stops);
+            let radii = new CornerRadii(1);
+            let insets = new Insets(2,2,2,2);
+            let fill = new BackgroundFill(gradient,radii,insets);
             fills.push(fill);
         }
         this.setBackground(new Background(fills));

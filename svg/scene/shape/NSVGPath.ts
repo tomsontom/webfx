@@ -94,12 +94,12 @@ export class NSVGPath extends NSVGNode {
     setFill(fill: Paint) {
         this.fill = fill;
         if (fill instanceof Color) {
-            var c = fill as Color;
+            let c = fill as Color;
             this.pathNode.setAttribute("fill", c.toRGBAString());
             //this.pathNode.setAttribute("fill-opacity", String(c.opacity));
         } else if (fill instanceof LinearGradient) {
-            var lg    = fill as LinearGradient;
-            var svgLg = NSVGNode.createLinearGradientElement();
+            let lg    = fill as LinearGradient;
+            let svgLg = NSVGNode.createLinearGradientElement();
             svgLg.setAttribute("x1", Utils.proportionalize(lg.startX, lg.proportional));
             svgLg.setAttribute("x2", Utils.proportionalize(lg.endX, lg.proportional));
             svgLg.setAttribute("y1", Utils.proportionalize(lg.startY, lg.proportional));
@@ -107,7 +107,7 @@ export class NSVGPath extends NSVGNode {
             svgLg.setAttribute("id", lg.id);
 
             lg.stops.map((stop) => {
-                var s = NSVGNode.createStopElement();
+                let s = NSVGNode.createStopElement();
                 s.setAttribute("offset", Utils.proportionalize(stop.offset, lg.proportional));
                 s.setAttribute("stop-color", stop.color.toRGBAString());
                 return s;
@@ -118,10 +118,10 @@ export class NSVGPath extends NSVGNode {
             this.defs.appendChild(svgLg);
             this.pathNode.setAttribute("fill", "url(#" + lg.id + ")");
         } else if (fill instanceof RadialGradient) {
-            var rg    = fill as RadialGradient;
-            var fx    = rg.focusDistance * Math.cos(rg.focusAngle) + rg.centerX;
-            var fy    = rg.focusDistance * Math.sin(rg.focusAngle) + rg.centerY;
-            var svgRg = NSVGNode.createRadialGradientElement();
+            let rg    = fill as RadialGradient;
+            let fx    = rg.focusDistance * Math.cos(rg.focusAngle) + rg.centerX;
+            let fy    = rg.focusDistance * Math.sin(rg.focusAngle) + rg.centerY;
+            let svgRg = NSVGNode.createRadialGradientElement();
             svgRg.setAttribute("cx", Utils.proportionalize(rg.centerX, rg.proportional));
             svgRg.setAttribute("cy", Utils.proportionalize(rg.centerY, rg.proportional));
             svgRg.setAttribute("r", Utils.proportionalize(rg.radius, rg.proportional));
@@ -129,7 +129,7 @@ export class NSVGPath extends NSVGNode {
             svgRg.setAttribute("fy", Utils.proportionalize(fy, rg.proportional));
             svgRg.setAttribute("id", rg.id);
             rg.stops.map((stop) => {
-                var s = NSVGNode.createStopElement();
+                let s = NSVGNode.createStopElement();
                 s.setAttribute("offset", Utils.proportionalize(stop.offset, rg.proportional));
                 s.setAttribute("stop-color", stop.color.toRGBAString());
                 return s;
@@ -149,12 +149,12 @@ export class NSVGPath extends NSVGNode {
     setStroke(stroke: Paint) {
         this.stroke = stroke;
         if (stroke instanceof Color) {
-            var c = stroke as Color;
+            let c = stroke as Color;
             this.pathNode.setAttribute("stroke", c.toRGBAString());
             //this.pathNode.setAttribute("stroke-opacity", String(c.opacity));
         } else if (stroke instanceof LinearGradient) {
-            var lg    = stroke as LinearGradient;
-            var svgLg = NSVGNode.createLinearGradientElement();
+            let lg    = stroke as LinearGradient;
+            let svgLg = NSVGNode.createLinearGradientElement();
             svgLg.setAttribute("x1", Utils.proportionalize(lg.startX, lg.proportional));
             svgLg.setAttribute("x2", Utils.proportionalize(lg.endX, lg.proportional));
             svgLg.setAttribute("y1", Utils.proportionalize(lg.startY, lg.proportional));
@@ -162,7 +162,7 @@ export class NSVGPath extends NSVGNode {
             svgLg.setAttribute("id", lg.id);
 
             lg.stops.map((stop) => {
-                var s = NSVGNode.createStopElement();
+                let s = NSVGNode.createStopElement();
                 s.setAttribute("offset", Utils.proportionalize(stop.offset, lg.proportional));
                 s.setAttribute("stop-color", stop.color.toRGBAString());
                 return s;
@@ -173,10 +173,10 @@ export class NSVGPath extends NSVGNode {
             this.defs.appendChild(svgLg);
             this.pathNode.setAttribute("stroke", "url(#" + lg.id + ")");
         } else if (stroke instanceof RadialGradient) {
-            var rg    = stroke as RadialGradient;
-            var fx    = rg.focusDistance * Math.cos(rg.focusAngle) + rg.centerX;
-            var fy    = rg.focusDistance * Math.sin(rg.focusAngle) + rg.centerY;
-            var svgRg = NSVGNode.createRadialGradientElement();
+            let rg    = stroke as RadialGradient;
+            let fx    = rg.focusDistance * Math.cos(rg.focusAngle) + rg.centerX;
+            let fy    = rg.focusDistance * Math.sin(rg.focusAngle) + rg.centerY;
+            let svgRg = NSVGNode.createRadialGradientElement();
             svgRg.setAttribute("cx", Utils.proportionalize(rg.centerX, rg.proportional));
             svgRg.setAttribute("cy", Utils.proportionalize(rg.centerY, rg.proportional));
             svgRg.setAttribute("r", Utils.proportionalize(rg.radius, rg.proportional));
@@ -184,7 +184,7 @@ export class NSVGPath extends NSVGNode {
             svgRg.setAttribute("fy", Utils.proportionalize(fy, rg.proportional));
             svgRg.setAttribute("id", rg.id);
             rg.stops.map((stop) => {
-                var s = NSVGNode.createStopElement();
+                let s = NSVGNode.createStopElement();
                 s.setAttribute("offset", Utils.proportionalize(stop.offset, rg.proportional));
                 s.setAttribute("stop-color", stop.color.toRGBAString());
                 return s;

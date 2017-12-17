@@ -1,4 +1,6 @@
 export class Insets {
+    public static readonly EMPTY : Insets = new Insets(0, 0, 0, 0);
+
     top    : number;
     right  : number;
     bottom : number;
