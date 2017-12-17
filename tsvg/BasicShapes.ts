@@ -53,14 +53,6 @@ export class TSVGRect extends TNode {
         this.set("ry",ry);
     }
 
-    get fill() {
-        return this.get("fill");
-    }
-
-    set fill( fill : string) {
-        this.set("fill",fill);
-    }
-
     // styleable
     get class() : string {
         return this.get("class");
@@ -104,4 +96,41 @@ export class TSVGRect extends TNode {
     set xmlspace(xmlspace: string) {
         this.set("xmlspace",xmlspace);
     }
+
+    // presentation attributes
+
+    get fill() {
+        return this.get("fill");
+    }
+
+    set fill( fill : string) {
+        this.set("fill",fill);
+    }
+
+    get fillOpacity() : number {
+        var v = this.get("fill-opacity");
+        return v ? 1 : Number(v);
+    }
+
+    set fillOpacity(fillOpacity: number) {
+        this.set("fill-opacity",fillOpacity == undefined ? "inherit" : String(fillOpacity));
+    }
+
+    set fillRule(fillRule: FillRule) {
+        this.set("fill-rule",String(fillRule));
+    }
+
+    get fillRule() {
+        var v = this.get("fill-rule");
+        if( v == "nonzero" ) {
+            return FillRule.nonzero;
+        } else if( v == "evenodd" ) {
+            return FillRule.evenodd;
+        }
+        return FillRule.inherit;
+    }
+}
+
+export enum FillRule {
+    nonzero,evenodd,inherit
 }
