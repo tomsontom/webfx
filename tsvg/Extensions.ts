@@ -52,14 +52,6 @@ export class TRoundedRect extends TShape {
         this._height = height;
     }
 
-    get fill() {
-        return this.get("fill");
-    }
-
-    set fill( fill : string) {
-        this.set("fill",fill);
-    }
-
     // styleable
     get class() : string {
         return this.get("class");
