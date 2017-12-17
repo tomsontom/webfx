@@ -5,7 +5,15 @@ export class TNode {
     constructor(type : string) {
         this.domNode = document.createElementNS(TNode.ns, type);
         this.domNode["ts"] = this;
-    }    
+    }
+
+    protected set(name : string, value : string) {
+        this.domNode.setAttribute(name,value);
+    }
+
+    protected get(name : string) {
+        return this.domNode.getAttribute(name);
+    }
 }
 
 export class TSVGElement {
@@ -33,103 +41,103 @@ export class TSVGRect extends TNode {
     }
 
     get x() : string {
-        return this.domNode.getAttribute("x");
+        return this.get("x");
     }
 
     set x( x : string) {
-        this.domNode.setAttribute("x",x);
+        this.set("x",x);
     }
 
     get y() : string {
-        return this.domNode.getAttribute("y");
+        return this.get("y");
     }
 
     set y( y : string) {
-        this.domNode.setAttribute("y",y);
+        this.set("y",y);
     }
 
     get width() : string {
-        return this.domNode.getAttribute("width");
+        return this.get("width");
     }
 
     set width( width : string) {
-        this.domNode.setAttribute("width",width);
+        this.set("width",width);
     }
 
     get height() : string {
-        return this.domNode.getAttribute("height");
+        return this.get("height");
     }
 
     set height( height : string) {
-        this.domNode.setAttribute("height",height);
+        this.set("height",height);
     }
 
     get rx() : string {
-        return this.domNode.getAttribute("rx");
+        return this.get("rx");
     }
 
     set rx( rx : string) {
-        this.domNode.setAttribute("rx",rx);
+        this.set("rx",rx);
     }
 
     get ry() : string {
-        return this.domNode.getAttribute("ry");
+        return this.get("ry");
     }
 
     set ry( ry : string) {
-        this.domNode.setAttribute("ry",ry);
+        this.set("ry",ry);
     }
 
     get fill() {
-        return this.domNode.getAttribute("fill");
+        return this.get("fill");
     }
 
     set fill( fill : string) {
-        this.domNode.setAttribute("fill",fill);
+        this.set("fill",fill);
     }
 
     // styleable
     get class() : string {
-        return this.domNode.getAttribute("class");
+        return this.get("class");
     }
 
     set class( cl : string) {
-        this.domNode.setAttribute("class",cl);
+        this.set("class",cl);
     }
 
     // transformable
     get transform() : string {
-        return this.domNode.getAttribute("transform");
+        return this.get("transform");
     }
 
     set transform(transform : string) {
-        this.domNode.setAttribute("transform",transform);
+        this.set("transform",transform);
     }
 
     // external resources required
     get externalResourcesRequired() : boolean {
-        return Boolean(this.domNode.getAttribute("externalResourcesRequired"));
+        return Boolean(this.get("externalResourcesRequired"));
     }
 
     set externalResourcesRequired( externalResourcesRequired: boolean ) {
-        this.domNode.setAttribute("externalResourcesRequired",String(externalResourcesRequired));
+        this.set("externalResourcesRequired",String(externalResourcesRequired));
     }
 
     // xml-namespaces
     get xmllang() : string {
-        return this.domNode.getAttribute("xmllang");
+        return this.get("xmllang");
     }
 
     set xmllang(xmllang : string) {
-        this.domNode.setAttribute("xmllang",xmllang);
+        this.set("xmllang",xmllang);
     }
 
     get xmlspace() {
-        return this.domNode.getAttribute("xmlspace");
+        return this.get("xmlspace");
     }
 
     set xmlspace(xmlspace: string) {
-        this.domNode.setAttribute("xmlspace",xmlspace);
+        this.set("xmlspace",xmlspace);
     }
 }
 
@@ -154,11 +162,11 @@ export class TGElement extends TNode {
 
     // transformable
     get transform() : string {
-        return this.domNode.getAttribute("transform");
+        return this.get("transform");
     }
 
     set transform(transform : string) {
-        this.domNode.setAttribute("transform",transform);
+        this.set("transform",transform);
     }
     
 }
@@ -175,34 +183,49 @@ export class TForeignObject extends TNode {
     }
 
     get x() : string {
-        return this.domNode.getAttribute("x");
+        return this.get("x");
     }
 
     set x( x : string) {
-        this.domNode.setAttribute("x",x);
+        this.set("x",x);
     }
 
     get y() : string {
-        return this.domNode.getAttribute("y");
+        return this.get("y");
     }
 
     set y( y : string) {
-        this.domNode.setAttribute("y",y);
+        this.set("y",y);
     }
 
     get width() : string {
-        return this.domNode.getAttribute("width");
+        return this.get("width");
     }
 
     set width( width : string) {
-        this.domNode.setAttribute("width",width);
+        this.set("width",width);
     }
 
     get height() : string {
-        return this.domNode.getAttribute("height");
+        return this.get("height");
     }
 
     set height( height : string) {
-        this.domNode.setAttribute("height",height);
+        this.set("height",height);
+    }
+
+    // transformable
+    get transform() : string {
+        return this.get("transform");
+    }
+
+    set transform(transform : string) {
+        this.set("transform",transform);
+    }
+}
+
+export class TSVGPath extends TNode {
+    constructor() {
+        super("path");
     }
 }
