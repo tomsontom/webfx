@@ -1,5 +1,9 @@
 import {Color} from "./../scene/paint/Color";
 import {Stop} from "./../scene/paint/Stop";
+import {Node} from "../scene/Node";
+import {HPos} from "../geometry/HPos";
+import {VPos} from "../geometry/VPos";
+import {Point2D} from "../geometry/Point2D";
 
 export class Utils {
 
@@ -230,5 +234,10 @@ export class Utils {
             return v * 100 + "%";
         }
         return v + "";
+    }
+
+    static pointRelativeTo(parent : Node, anchorWidth : number, anchorHeight : number, hpos : HPos, vpos : VPos, dx : number, dy : number, reposition : boolean) : Point2D {
+        //TODO: implement correct code
+        return new Point2D(0, 0);
     }
 }

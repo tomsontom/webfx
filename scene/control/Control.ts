@@ -5,10 +5,10 @@ import {SkinBase} from "./SkinBase";
 import {Tooltip} from "./Tooltip";
 
 export abstract class Control extends Region implements Skinnable {
-    skin     : Skin<any>;
-    skinBase : SkinBase<any>;
-    tooltip  : Tooltip;
-
+    skin        : Skin<any>;
+    skinBase    : SkinBase<any>;
+    tooltip     : Tooltip;
+    contextMenu : ContextMenu;
 
 
 }
