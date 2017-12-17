@@ -1,4 +1,5 @@
-import { TNode, TGElement } from "./SVG";
+import { TNode } from "./Base";
+
 
 export class TRoundedRect extends TNode {
     private _x      : number = 0;
