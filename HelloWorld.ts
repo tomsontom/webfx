@@ -11,7 +11,7 @@ import { NSVGPath } from "./svg/scene/shape/NSVGPath";
 import {ClosePath, LineTo, MoveTo} from "./scene/shape/PathElement";
 import {Path} from "./scene/shape/Path";
 import { TRoundedRect } from "./tsvg/Extensions";
-import { ElementUtils } from "./tsvg/Utils";
+import { TElementUtils } from "./tsvg/Utils";
 
 export class App {
     samples : Sample[] = [];
@@ -24,7 +24,7 @@ export class App {
     }
 
     loadSample(field : HTMLSelectElement) {
-        var svg = ElementUtils.clear(document.getElementById("sample"));
+        var svg = TElementUtils.clear(document.getElementById("sample"));
         this.samples[field.selectedIndex].render(svg);
         location.hash = String(field.selectedIndex);
     }

@@ -1,6 +1,6 @@
-export type Length = number | string;
+export type TLength = number | string;
 
-export class ElementUtils {
+export class TElementUtils {
     static clear( element : Element ) {
         while (element.firstChild) {
             element.removeChild(element.firstChild);
@@ -9,8 +9,8 @@ export class ElementUtils {
     }
 }
 
-export class LengthUtils {
-    static isValid(length: Length, percentage? : boolean) : boolean {
+export class TLengthUtils {
+    static isValid(length: TLength, percentage? : boolean) : boolean {
         if( typeof length === "number" ) {
             return true;
         } 

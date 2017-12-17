@@ -1,11 +1,11 @@
 import { TNode } from "./Base";
-import { Length, LengthUtils } from "./Utils";
+import { TLength, TLengthUtils } from "./Utils";
 
-export enum FillRule {
+export enum TFillRule {
     nonzero,evenodd,inherit
 }
 
-export enum PointerEvents {
+export enum TPointerEvents {
     visiblePainted,
     visibleFill,
     visibleStroke,
@@ -18,7 +18,7 @@ export enum PointerEvents {
     inherit
 }
 
-export enum ShapeRendering {
+export enum TShapeRendering {
     auto,
     optimizeSpeed,
     crispEdges,
@@ -26,22 +26,22 @@ export enum ShapeRendering {
     inherit
 }
 
-export enum StrokeLineCap {
+export enum TStrokeLineCap {
     butt,
     round,
     square,
     inherit
 }
 
-export enum StrokeLinejoin {
+export enum TStrokeLinejoin {
     miter,
     round,
     bevel,
     inherit
 }
 
-export type NumberOrInherit = number | "inherit";
-export type DashArray = number[] | "none" | "inherit";
+export type TNumberOrInherit = number | "inherit";
+export type TDashArray = number[] | "none" | "inherit";
 
 export class TShape extends TNode {
     constructor(type : string) {
@@ -56,7 +56,7 @@ export class TShape extends TNode {
         this.set("fill",fill);
     }
 
-    get fillOpacity() : NumberOrInherit {
+    get fillOpacity() : TNumberOrInherit {
         var rv = this.get("fill-opacity");
         if( rv == "inherit" ) {
             return "inherit";
@@ -64,7 +64,7 @@ export class TShape extends TNode {
         return Number(rv);
     }
 
-    set fillOpacity(fillOpacity: NumberOrInherit) {
+    set fillOpacity(fillOpacity: TNumberOrInherit) {
         var value = String(fillOpacity);
         if( typeof fillOpacity === "number" && ( fillOpacity < 0 || fillOpacity > 1 ) ) {
             console.log("Opacity of '",fillOpacity,"' is not in range 0.0 - 1.0");
@@ -73,18 +73,18 @@ export class TShape extends TNode {
         this.set("fill-opacity",String(fillOpacity));
     }
 
-    set fillRule(fillRule: FillRule) {
+    set fillRule(fillRule: TFillRule) {
         this.set("fill-rule",String(fillRule));
     }
 
     get fillRule() {
         var v = this.get("fill-rule");
         if( v == "nonzero" ) {
-            return FillRule.nonzero;
+            return TFillRule.nonzero;
         } else if( v == "evenodd" ) {
-            return FillRule.evenodd;
+            return TFillRule.evenodd;
         }
-        return FillRule.inherit;
+        return TFillRule.inherit;
     }
 
     get filter() : string {
@@ -95,7 +95,7 @@ export class TShape extends TNode {
         this.set("filter",filter);
     }
 
-    set opacity(opacity: NumberOrInherit) {
+    set opacity(opacity: TNumberOrInherit) {
         var value = String(opacity);
         if( typeof opacity === "number" && ( opacity < 0 || opacity > 1 ) ) {
             console.log("Opacity of '",opacity,"' is not in range 0.0 - 1.0");
@@ -104,7 +104,7 @@ export class TShape extends TNode {
         this.set("opacity",String(opacity));
     }
 
-    get opacity() : NumberOrInherit {
+    get opacity() : TNumberOrInherit {
         var rv = this.get("opacity");
         if( rv == "inherit" ) {
             return "inherit";
@@ -112,45 +112,45 @@ export class TShape extends TNode {
         return Number(rv);
     }
 
-    set pointerEvents(pointerEvents: PointerEvents) {
+    set pointerEvents(pointerEvents: TPointerEvents) {
         this.set("pointer-events",String(pointerEvents));
     }
 
-    get pointerEvents() : PointerEvents {
+    get pointerEvents() : TPointerEvents {
         var value = this.get("pointer-events");
         
         switch(value) {
-            case "visiblePainted"   : return PointerEvents.visiblePainted;
-            case "visibleFill"      : return PointerEvents.visibleFill;
-            case "visibleStroke"    : return PointerEvents.visibleStroke;
-            case "visible"          : return PointerEvents.visible;
-            case "painted"          : return PointerEvents.painted;
-            case "fill"             : return PointerEvents.fill;
-            case "stroke"           : return PointerEvents.stroke;
-            case "all"              : return PointerEvents.all;
-            case "none"             : return PointerEvents.none;
-            case "inherit"          : return PointerEvents.inherit;
+            case "visiblePainted"   : return TPointerEvents.visiblePainted;
+            case "visibleFill"      : return TPointerEvents.visibleFill;
+            case "visibleStroke"    : return TPointerEvents.visibleStroke;
+            case "visible"          : return TPointerEvents.visible;
+            case "painted"          : return TPointerEvents.painted;
+            case "fill"             : return TPointerEvents.fill;
+            case "stroke"           : return TPointerEvents.stroke;
+            case "all"              : return TPointerEvents.all;
+            case "none"             : return TPointerEvents.none;
+            case "inherit"          : return TPointerEvents.inherit;
         }
 
-        return PointerEvents.visiblePainted;
+        return TPointerEvents.visiblePainted;
     }
 
-    set shapeRendering(shapeRendering: ShapeRendering) {
+    set shapeRendering(shapeRendering: TShapeRendering) {
         this.set("shape-rendering",String(shapeRendering));
     }
 
-    get shapeRendering() : ShapeRendering {
+    get shapeRendering() : TShapeRendering {
         var value = this.get("shape-rendering");
         
         switch(value) {
-            case "auto"                 : return ShapeRendering.auto;
-            case "optimizeSpeed"        : return ShapeRendering.optimizeSpeed;
-            case "crispEdges"           : return ShapeRendering.crispEdges;
-            case "geometricPrecision"   : return ShapeRendering.geometricPrecision;
-            case "inherit"              : return ShapeRendering.inherit;
+            case "auto"                 : return TShapeRendering.auto;
+            case "optimizeSpeed"        : return TShapeRendering.optimizeSpeed;
+            case "crispEdges"           : return TShapeRendering.crispEdges;
+            case "geometricPrecision"   : return TShapeRendering.geometricPrecision;
+            case "inherit"              : return TShapeRendering.inherit;
         }
 
-        return ShapeRendering.auto;
+        return TShapeRendering.auto;
     }
 
     set stroke(stroke : string) {
@@ -161,7 +161,7 @@ export class TShape extends TNode {
         return this.get("stroke");
     }
 
-    set strokeDasharray(strokeDasharray : DashArray) {
+    set strokeDasharray(strokeDasharray : TDashArray) {
         if( typeof strokeDasharray === "string" ) {
             this.set("stroke-dasharray",String(strokeDasharray));
         } else {
@@ -169,7 +169,7 @@ export class TShape extends TNode {
         }
     }
 
-    get strokeDasharray() : DashArray {
+    get strokeDasharray() : TDashArray {
         var value = this.get("stroke-dasharray");
 
         if( value == "none" ) {
@@ -180,53 +180,53 @@ export class TShape extends TNode {
         return value.split(",").map( v => Number(v) );
     }
 
-    get strokeDashoffset() : Length {
+    get strokeDashoffset() : TLength {
         var v = this.get("stroke-dashoffset");
         return v ? v : 0;
     }
 
-    set strokeDashoffset(strokeDashoffset: Length) {
-        if( LengthUtils.isValid(strokeDashoffset,true) ) {
+    set strokeDashoffset(strokeDashoffset: TLength) {
+        if( TLengthUtils.isValid(strokeDashoffset,true) ) {
             this.set("stroke-dashoffset",String(strokeDashoffset));
         } else {
             console.log("Invalid length value '",strokeDashoffset,"'");
         }
     }
 
-    set strokeLinecap(strokeLinecap : StrokeLineCap) {
+    set strokeLinecap(strokeLinecap : TStrokeLineCap) {
         this.set("stroke-linecap",String(strokeLinecap));
     }
 
     get strokeLinecap() {
         var v = this.get("stroke-linecap");
         switch(v) {
-            case "butt"     : return StrokeLineCap.butt;
-            case "round"    : return StrokeLineCap.round;
-            case "square"   : return StrokeLineCap.square;
-            case "inherit"  : return StrokeLineCap.inherit;
+            case "butt"     : return TStrokeLineCap.butt;
+            case "round"    : return TStrokeLineCap.round;
+            case "square"   : return TStrokeLineCap.square;
+            case "inherit"  : return TStrokeLineCap.inherit;
         }
-        return StrokeLineCap.butt;
+        return TStrokeLineCap.butt;
     }
 
-    set strokeLinejoin( strokeLinejoin: StrokeLinejoin ) {
+    set strokeLinejoin( strokeLinejoin: TStrokeLinejoin ) {
         this.set("stroke-linejoin",String(strokeLinejoin));
     }
 
-    get strokeLinejoin() : StrokeLinejoin {
+    get strokeLinejoin() : TStrokeLinejoin {
         var v = this.get("stroke-linejoin");
         switch(v) {
-            case "miter" : return StrokeLinejoin.miter;
-            case "round" : return StrokeLinejoin.round;
-            case "bevel" : return StrokeLinejoin.bevel;
-            case "inherit" : return StrokeLinejoin.inherit;
+            case "miter" : return TStrokeLinejoin.miter;
+            case "round" : return TStrokeLinejoin.round;
+            case "bevel" : return TStrokeLinejoin.bevel;
+            case "inherit" : return TStrokeLinejoin.inherit;
         }
 
-        return StrokeLinejoin.miter;
+        return TStrokeLinejoin.miter;
     }
 
     // stroke-miterlimit
 
-    set strokeOpacity(strokeOpacity: NumberOrInherit) {
+    set strokeOpacity(strokeOpacity: TNumberOrInherit) {
         this.set("stroke-opacity",String(strokeOpacity));
     }
 
@@ -238,15 +238,15 @@ export class TShape extends TNode {
         return v ? Number(v) : 1;
     }
 
-    set strokeWidth(strokeWidth: Length) {
-        if( LengthUtils.isValid(strokeWidth,true) ) {
+    set strokeWidth(strokeWidth: TLength) {
+        if( TLengthUtils.isValid(strokeWidth,true) ) {
             this.set("stroke-width",String(strokeWidth));
         } else {
             console.log("Invalid length value '",strokeWidth,"'");
         }
     }
 
-    get strokeWidth() : Length {
+    get strokeWidth() : TLength {
         return this.get("stroke-width");
     }
 }
@@ -256,72 +256,72 @@ export class TSVGRect extends TShape {
         super("rect");
     }
 
-    get x() : Length {
+    get x() : TLength {
         return this.get("x");
     }
 
-    set x( x : Length) {
-        if( LengthUtils.isValid(x) ) {
+    set x( x : TLength) {
+        if( TLengthUtils.isValid(x) ) {
             this.set("x",String(x));
         } else {
             console.log("Invalid length value '",x,"'");
         }
     }
 
-    get y() : Length {
+    get y() : TLength {
         return this.get("y");
     }
 
-    set y( y : Length) {
-        if( LengthUtils.isValid(y) ) {
+    set y( y : TLength) {
+        if( TLengthUtils.isValid(y) ) {
             this.set("y",String(y));
         } else {
             console.log("Invalid length value '",y,"'");
         }
     }
 
-    get width() : Length {
+    get width() : TLength {
         return this.get("width");
     }
 
-    set width( width : Length) {
-        if( LengthUtils.isValid(width) ) {
+    set width( width : TLength) {
+        if( TLengthUtils.isValid(width) ) {
             this.set("width",String(width));
         } else {
             console.log("Invalid length value '",width,"'");
         }
     }
 
-    get height() : Length {
+    get height() : TLength {
         return this.get("height");
     }
 
-    set height( height : Length) {
-        if( LengthUtils.isValid(height) ) {
+    set height( height : TLength) {
+        if( TLengthUtils.isValid(height) ) {
             this.set("height",String(height));
         } else {
             console.log("Invalid length value '",height,"'");
         }
     }
 
-    get rx() : Length {
+    get rx() : TLength {
         return this.get("rx");
     }
 
-    set rx( rx : Length) {
-        if( LengthUtils.isValid(rx) ) {
+    set rx( rx : TLength) {
+        if( TLengthUtils.isValid(rx) ) {
             this.set("rx",String(rx));
         } else {
             console.log("Invalid length value '",rx,"'");
         }
     }
 
-    get ry() : Length {
+    get ry() : TLength {
         return this.get("ry");
     }
 
-    set ry( ry : Length) {
-        if( LengthUtils.isValid(ry) ) {
+    set ry( ry : TLength) {
+        if( TLengthUtils.isValid(ry) ) {
             this.set("ry",String(ry));
         } else {
             console.log("Invalid length value '",ry,"'");
