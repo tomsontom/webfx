@@ -141,6 +141,9 @@ class RoundRectSample extends Sample {
         rect.y = 10;
         rect.width = 200;
         rect.height = 200;
+        rect.fill = "transparent";
+        rect.stroke = "black";
+        rect.strokeWidth = 2;
 
         // upper left
         rect.topLeftHorizontalRadius = 20;
@@ -151,12 +154,12 @@ class RoundRectSample extends Sample {
         rect.topRightVerticalRadius = 20;
 
         // lower right
-        rect.bottomRightVerticalRadius = 20;
-        rect.bottomRightHorizontalRadius = 20;
+        rect.bottomRightVerticalRadius = 10;
+        rect.bottomRightHorizontalRadius = 10;
 
         // lower left
-        rect.bottomLeftHorizontalRadius = 20;
-        rect.bottomLeftVerticalRadius = 20;
+        rect.bottomLeftHorizontalRadius = 10;
+        rect.bottomLeftVerticalRadius = 10;
 
         rect.pack();
         svg.appendChild(rect.domNode);
