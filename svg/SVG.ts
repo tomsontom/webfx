@@ -151,10 +151,58 @@ export class TGElement extends TNode {
             f.apply( this.domNode.children[i]["ts"]);
         }
     }
+
+    // transformable
+    get transform() : string {
+        return this.domNode.getAttribute("transform");
+    }
+
+    set transform(transform : string) {
+        this.domNode.setAttribute("transform",transform);
+    }
+    
 }
 
 export class TDefsElement extends TNode {
     constructor() {
         super("defs");
+    }
+}
+
+export class TForeignObject extends TNode {
+    constructor() {
+        super("foreignObject");
+    }
+
+    get x() : string {
+        return this.domNode.getAttribute("x");
+    }
+
+    set x( x : string) {
+        this.domNode.setAttribute("x",x);
+    }
+
+    get y() : string {
+        return this.domNode.getAttribute("y");
+    }
+
+    set y( y : string) {
+        this.domNode.setAttribute("y",y);
+    }
+
+    get width() : string {
+        return this.domNode.getAttribute("width");
+    }
+
+    set width( width : string) {
+        this.domNode.setAttribute("width",width);
+    }
+
+    get height() : string {
+        return this.domNode.getAttribute("height");
+    }
+
+    set height( height : string) {
+        this.domNode.setAttribute("height",height);
     }
 }
