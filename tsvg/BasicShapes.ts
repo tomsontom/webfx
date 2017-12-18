@@ -372,3 +372,100 @@ export class TRect extends TShape {
         this.set("xmlspace",xmlspace);
     }
 }
+
+export class TCircle extends TShape {
+    constructor() {
+        super("circle");
+    }
+
+    get cx() {
+        return this.get("cx");
+    }
+
+    set cx(cx : TLength) {
+        if( TLengthUtils.isValid(cx) ) {
+            this.set("cx",String(cx));
+        } else {
+            console.log("Invalid length value '",cx,"'");
+        }
+    }
+
+    get cy() {
+        return this.get("cy");
+    }
+
+    set cy(cy : TLength) {
+        if( TLengthUtils.isValid(cy) ) {
+            this.set("cy",String(cy));
+        } else {
+            console.log("Invalid length value '",cy,"'");
+        }
+    }
+
+    get r() {
+        return this.get("r");
+    }
+
+    set r(r : TLength) {
+        if( TLengthUtils.isValid(r) ) {
+            this.set("r",String(r));
+        } else {
+            console.log("Invalid length value '",r,"'");
+        }
+    }
+}
+
+export class TEllipse extends TShape {
+    constructor() {
+        super("ellipse");
+    }
+
+    get cx() {
+        return this.get("cx");
+    }
+
+    set cx(cx : TLength) {
+        if( TLengthUtils.isValid(cx) ) {
+            this.set("cx",String(cx));
+        } else {
+            console.log("Invalid length value '",cx,"'");
+        }
+    }
+
+    get cy() {
+        return this.get("cy");
+    }
+
+    set cy(cy : TLength) {
+        if( TLengthUtils.isValid(cy) ) {
+            this.set("cy",String(cy));
+        } else {
+            console.log("Invalid length value '",cy,"'");
+        }
+    }
+
+    get rx() {
+        return this.get("rx");
+    }
+
+    set rx(rx : TLength) {
+        if( TLengthUtils.isValid(rx) ) {
+            this.set("cx",String(rx));
+        } else {
+            console.log("Invalid length value '",rx,"'");
+        }
+    }
+
+    get ry() {
+        return this.get("ry");
+    }
+
+    set ry(ry : TLength) {
+        if( TLengthUtils.isValid(ry) ) {
+            this.set("cy",String(ry));
+        } else {
+            console.log("Invalid length value '",ry,"'");
+        }
+    }
+
+}
